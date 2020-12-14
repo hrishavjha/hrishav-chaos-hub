@@ -1,0 +1,72 @@
+apiVersion: litmuschaos.io/v1alpha1
+description:
+  message: |
+    Injects cpu consumption on pods belonging to an app deployment
+kind: ChaosExperiment
+metadata:
+  name: pod-cpu-hog
+spec:
+  definition:
+    scope: Namespaced
+    permissions:
+      - apiGroups:
+          - ""
+          - "batch"
+          - "litmuschaos.io"
+        resources:
+          - "jobs"
+          - "pods"
+          - "pods/log"
+          - "events"
+          - "pods/exec"
+          - "chaosengines"
+          - "chaosexperiments"
+          - "chaosresults"
+        verbs:
+          - "create"
+          - "list"
+          - "get"
+          - "patch"
+          - "update"
+          - "delete"
+          - "deletecollection"
+    image: "litmuschaos/go-runner:latest"
+    imagePullPolicy: Always
+    args:
+    - -c
+    - ./experiments/pod-cpu-hog
+    command:
+    - /bin/bash
+    env:
+    - name: TOTAL_CHAOS_DURATION
+      value: '60'
+    
+    - name: CHAOS_INTERVAL
+      value: '10'
+
+    ## Number of CPU cores to stress
+    - name: CPU_CORES
+      value: '1'
+
+    ## Percentage of total pods to target
+    - name: PODS_AFFECTED_PERC
+      value: ''
+
+    ## Period to wait before and after injection of chaos in sec
+    - name: RAMP_TIME
+      value: ''
+
+    ## env var that describes the library used to execute the chaos
+    ## default: litmus. Supported values: litmus, pumba    
+    - name: LIB
+      value: 'litmus'
+
+    ## It is used in pumba lib only    
+    - name: LIB_IMAGE
+      value: 'gaiaadm/pumba'  
+
+    - name: TARGET_POD
+      value: ''
+      
+    labels:
+      name: pod-cpu-hog
