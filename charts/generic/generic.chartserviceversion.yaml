@@ -34,6 +34,8 @@ spec:
     - k8-service-kill
     - node-io-stress
     - pod-io-stress
+    - demo1
+    - demo2
     
   keywords:
     - Kubernetes
