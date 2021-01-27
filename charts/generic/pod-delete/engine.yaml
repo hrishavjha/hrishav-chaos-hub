@@ -3,6 +3,7 @@ kind: ChaosEngine
 metadata:
   name: pod-delete
   namespace: default
+  label: pod-delete-123
 spec:
   appinfo:
     appns: 'default'
