@@ -42,7 +42,7 @@ spec:
     env:
 
     - name: TOTAL_CHAOS_DURATION
-      value: '20'
+      value: '30'
 
     # Period to wait before and after injection of chaos in sec
     - name: RAMP_TIME
