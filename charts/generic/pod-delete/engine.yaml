@@ -30,7 +30,7 @@ spec:
 
             # set chaos interval (in sec) as desired
             - name: CHAOS_INTERVAL
-              value: '10'
+              value: '20'
               
             # pod failures without '--force' & default terminationGracePeriodSeconds
             - name: FORCE
