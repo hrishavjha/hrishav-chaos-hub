@@ -4,8 +4,8 @@ metadata:
   creationTimestamp: null
   labels:
     cluster_id: fdcd23bf-d3c1-4deb-8ada-5d0faa4a2f0b
-    subject: custom-chaos-workflow_litmus
-    workflow_id: 308b1a4b-0a34-4a93-9ff9-9e338d9382d9
+    subject: custom-chaos-workflow_litmus_123456
+    workflow_id: b4f3d1aa-ca51-418b-ad0c-b3c6fa782dde
     workflows.argoproj.io/controller-instanceid: fdcd23bf-d3c1-4deb-8ada-5d0faa4a2f0b
   name: custom-chaos-workflow-1624620179
   namespace: litmus
