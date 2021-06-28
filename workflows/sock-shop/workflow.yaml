@@ -118,9 +118,9 @@ spec:
                             #number of cpu cores to be consumed
                             #verify the resources the app has been launched with
                             - name: CPU_CORES
-                              value: '1'
+                              value: '2'
                             - name: TOTAL_CHAOS_DURATION
-                              value: '30' # in seconds
+                              value: '60' # in seconds
                             - name: CHAOS_KILL_COMMAND
                               value: "kill -9 $(ps afx | grep \"[md5sum] /dev/zero\" | awk '{print$1}' | tr '\n' ' ')"
         
