@@ -45,7 +45,7 @@ spec:
 
     - name: install-application
       container:
-        image: litmuschaos/litmus-app-deployer:latest
+        image: amitkrdas/litmus-app-deployer:latest
         args: ["-namespace=sock-shop","-typeName=resilient","-operation=apply","-timeout=400", "-app=sock-shop","-scope=cluster"] #for weak provide type flagName as resilient(-typeName=weak)
 
     - name: install-chaos-experiments
@@ -437,7 +437,7 @@ spec:
     
     - name: revert-chaos
       container:
-        image: litmuschaos/k8s:latest
+        image: amitkrdas/k8s:latest
         command: [sh, -c]
         args: 
           [ 
