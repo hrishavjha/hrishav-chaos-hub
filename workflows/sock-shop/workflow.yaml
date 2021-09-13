@@ -32,17 +32,6 @@ spec:
             template: pod-delete
         - - name: pod-network-loss
             template: pod-network-loss
-        - - name: pod-memory-hog
-            template: pod-memory-hog
-        - - name: disk-fill
-            template: disk-fill   
-        - - name: revert-chaos
-            template: revert-chaos
-        #  - name: delete-application
-        #    template: delete-application
-          - name: delete-loadtest
-            template: delete-loadtest
-
     - name: install-application
       container:
         image: amitkrdas/litmus-app-deployer:latest
