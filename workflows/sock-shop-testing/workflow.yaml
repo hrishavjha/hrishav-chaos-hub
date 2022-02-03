@@ -85,21 +85,6 @@ spec:
                             interval: 12
                             retry: 3
                             probePollingInterval: 1
-                        - name: "check-benchmark"
-                          type: "cmdProbe"
-                          cmdProbe/inputs:
-                            command: "curl http://qps-test.sock-shop.svc.cluster.local"
-                            comparator:
-                              type: "int" # supports: string, int, float
-                              criteria: ">=" #supports >=,<=,>,<,==,!= for int and contains,equal,notEqual,matches,notMatches for string values
-                              value: "100"
-                            source: "inline" # it can be “inline” or any image
-                          mode: "Edge"
-                          runProperties:
-                            probeTimeout: 2
-                            interval: 1
-                            retry: 2
-                            initialDelaySeconds: 2
                         components:
                           env:
                             - name: TOTAL_CHAOS_DURATION
