@@ -28,10 +28,6 @@ spec:
             template: load-test
         - - name: pod-cpu-hog
             template: pod-cpu-hog
-        - - name: pod-delete
-            template: pod-delete
-        - - name: pod-network-loss
-            template: pod-network-loss
     - name: install-application
       container:
         image: amitkrdas/litmus-app-deployer:latest
