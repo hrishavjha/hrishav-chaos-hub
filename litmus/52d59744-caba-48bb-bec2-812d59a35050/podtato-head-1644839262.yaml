@@ -113,7 +113,7 @@ spec:
                           method:
                             get:
                               criteria: ==
-                              responseCode: "200"
+                              responseCode: "400"
                         mode: Continuous
                         runProperties:
                           probeTimeout: 1
