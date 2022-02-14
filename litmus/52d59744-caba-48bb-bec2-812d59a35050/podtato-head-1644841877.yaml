@@ -93,7 +93,7 @@ spec:
             spec:
               appinfo:
                 appns: "{{workflow.parameters.adminModeNamespace}}"
-                applabel: name=podtato-main
+                applabel: name=podtato-main-test
                 appkind: deployment
               engineState: active
               chaosServiceAccount: litmus-admin
