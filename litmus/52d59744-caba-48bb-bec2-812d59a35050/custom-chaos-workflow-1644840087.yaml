@@ -235,7 +235,7 @@ spec:
                         - name: TOTAL_CHAOS_DURATION
                           value: "50"
                         - name: CHAOS_INTERVAL
-                          value: "10"
+                          value: "40"
                         - name: FORCE
                           value: "false"
                         - name: PODS_AFFECTED_PERC
