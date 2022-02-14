@@ -5,6 +5,8 @@ metadata:
   labels:
     cluster_id: 669c9e84-afa7-41f4-9b80-63268c95923e
     subject: custom-chaos-workflow_litmus
+    workflow_id: b133b493-404d-4504-addd-54794d241b6f
+    workflows.argoproj.io/controller-instanceid: 669c9e84-afa7-41f4-9b80-63268c95923e
   name: testing_1234
   namespace: litmus
 spec:
