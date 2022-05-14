@@ -4,6 +4,8 @@ metadata:
   creationTimestamp: null
   labels:
     cluster_id: 65592a0b-b9a9-475f-9968-65426dff8786
+    workflow_id: b4d017e7-20fa-45fa-8d93-61a48f6eeec9
+    workflows.argoproj.io/controller-instanceid: 65592a0b-b9a9-475f-9968-65426dff8786
   name: testing-git-op-1
   namespace: litmus
 spec:
