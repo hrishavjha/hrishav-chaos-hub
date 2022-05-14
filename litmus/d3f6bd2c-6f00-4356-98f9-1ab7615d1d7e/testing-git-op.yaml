@@ -2,10 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   creationTimestamp: null
+  labels:
+    cluster_id: 65592a0b-b9a9-475f-9968-65426dff8786
+    workflow_id: 926fdaf9-7dd9-485b-ab52-d80c05040f33
+    workflows.argoproj.io/controller-instanceid: 65592a0b-b9a9-475f-9968-65426dff8786
   name: testing-git-op
   namespace: litmus
-  labels:
-    cluster_id: 65592a0b-b9a9-475f-9968-65426dff8786  
 spec:
   arguments:
     parameters:
