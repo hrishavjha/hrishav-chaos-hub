@@ -219,7 +219,7 @@ spec:
             spec:
               appinfo:
                 appns: default
-                applabel: app=nginx
+                applabel: app=nginx-parallel
                 appkind: deployment
               engineState: active
               chaosServiceAccount: litmus-admin
@@ -229,9 +229,9 @@ spec:
                     components:
                       env:
                         - name: TOTAL_CHAOS_DURATION
-                          value: "100"
+                          value: "200"
                         - name: CHAOS_INTERVAL
-                          value: "60"
+                          value: "50"
                         - name: FORCE
                           value: "false"
                         - name: PODS_AFFECTED_PERC
