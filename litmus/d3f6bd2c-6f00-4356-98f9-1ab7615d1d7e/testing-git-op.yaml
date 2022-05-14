@@ -4,6 +4,8 @@ metadata:
   creationTimestamp: null
   name: testing-git-op
   namespace: litmus
+  labels:
+    cluster_id: 65592a0b-b9a9-475f-9968-65426dff8786  
 spec:
   arguments:
     parameters:
