@@ -229,9 +229,9 @@ spec:
                     components:
                       env:
                         - name: TOTAL_CHAOS_DURATION
-                          value: "200"
+                          value: "100"
                         - name: CHAOS_INTERVAL
-                          value: "50"
+                          value: "80"
                         - name: FORCE
                           value: "false"
                         - name: PODS_AFFECTED_PERC
