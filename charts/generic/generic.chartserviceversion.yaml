@@ -15,5 +15,4 @@ spec:
   - node-taint
   - pod-network-corruption
   - pod-network-duplication
-  - pod-network-duplication
   - pod-network-loss
