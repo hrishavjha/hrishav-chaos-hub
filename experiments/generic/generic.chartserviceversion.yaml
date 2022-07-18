@@ -73,6 +73,10 @@ spec:
       description: ""
     - name: pod-http-status-code-1
       description: ""
+    - name: pod-http-status-code-2
+      description: ""
+    - name: pod-http-status-code-3
+      description: ""
   keywords:
     - Kubernetes
     - K8S
