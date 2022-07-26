@@ -5,6 +5,7 @@ metadata:
   labels:
     cluster_id: 82678976-30a5-4337-8a9d-41af1ff4ebdd
     subject: custom-chaos-scenario_litmus
+    workflow_id: 36154181-8216-46fb-8402-4e397c026f90
     workflows.argoproj.io/controller-instanceid: 82678976-30a5-4337-8a9d-41af1ff4ebdd
   name: lolpol
   namespace: litmus
