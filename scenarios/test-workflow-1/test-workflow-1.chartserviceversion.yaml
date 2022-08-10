@@ -19,7 +19,11 @@ spec:
   chaosType: ""
   displayName: test-workflow-1 chaos
   experiments: null
-  keywords: null
+  keywords:
+  - Kubernetes
+  - K8s
+  - pod
+  - delete
   links: null
   maintainers: null
   maturity: ""
