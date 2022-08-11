@@ -19,10 +19,10 @@ spec:
   chaosType: ""
   displayName: test-workflow-push-1 chaos
   experiments:
-  - description: pod delete exp
-    name: pod-delete
-  - description: pod cpu hog
-    name: pod-cpu-hog
+  - description: ""
+    name: ecs-agent-stop-4iv
+  - description: ""
+    name: azure-instance-stop-6k3
   keywords:
   - Kubernetes
   - K8s
