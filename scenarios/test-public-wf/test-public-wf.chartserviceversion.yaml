@@ -1,0 +1,38 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: test-public-wf
+  version: ""
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: dummy
+  chaosExpCRDLink: ""
+  chaosType: ""
+  displayName: test-public-wf chaos
+  experiments:
+  - description: ""
+    name: pod-delete-j1k
+  keywords:
+  - Kubernetes
+  - K8s
+  - pod
+  - delete
+  links: null
+  maintainers:
+  - email: ""
+    name: Harness
+  maturity: ""
+  minKubeVersion: ""
+  platforms: null
+  provider:
+    name: ""
+  scenarios: null
