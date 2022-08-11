@@ -1,0 +1,40 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: testing-amit-7
+  version: ""
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: this is a test workflow
+  chaosExpCRDLink: ""
+  chaosType: ""
+  displayName: testing-amit-7 chaos
+  experiments:
+  - description: ""
+    name: ecs-agent-stop-4iv
+  - description: ""
+    name: azure-instance-stop-6k3
+  keywords:
+  - Kubernetes
+  - K8s
+  - pod
+  - delete
+  links: null
+  maintainers:
+  - email: ""
+    name: Harness
+  maturity: ""
+  minKubeVersion: ""
+  platforms: null
+  provider:
+    name: ""
+  scenarios: null
