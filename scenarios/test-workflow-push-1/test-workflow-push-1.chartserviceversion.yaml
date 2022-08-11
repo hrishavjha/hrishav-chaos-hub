@@ -18,7 +18,11 @@ spec:
   chaosExpCRDLink: ""
   chaosType: ""
   displayName: test-workflow-push-1 chaos
-  experiments: null
+  experiments:
+  - description: pod delete exp
+    name: pod-delete
+  - description: pod cpu hog
+    name: pod-cpu-hog
   keywords:
   - Kubernetes
   - K8s
