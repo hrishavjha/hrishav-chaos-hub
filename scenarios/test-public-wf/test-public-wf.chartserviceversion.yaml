@@ -14,13 +14,13 @@ packageInfo:
   experiments: null
   packageName: ""
 spec:
-  categoryDescription: dummy
+  categoryDescription: test desc
   chaosExpCRDLink: ""
   chaosType: ""
   displayName: test-public-wf chaos
   experiments:
   - description: ""
-    name: pod-delete-j1k
+    name: pod-network-loss-j4p
   keywords:
   - Kubernetes
   - K8s

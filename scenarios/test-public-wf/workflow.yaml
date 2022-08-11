@@ -3,7 +3,7 @@ kind: Workflow
 metadata:
   creationTimestamp: null
   labels:
-    subject: custom_litmus
+    subject: nginx-pod-network-loss_litmus
   name: test-public-wf
   namespace: litmus
 spec:
@@ -12,6 +12,8 @@ spec:
     - name: adminModeNamespace
       value: litmus
   entrypoint: custom-chaos
+  podGC:
+    strategy: OnWorkflowCompletion
   securityContext:
     runAsNonRoot: true
     runAsUser: 1000
@@ -26,33 +28,36 @@ spec:
         name: install-chaos-experiments
         template: install-chaos-experiments
     - - arguments: {}
-        name: pod-delete-j1k
-        template: pod-delete-j1k
+        name: pod-network-loss-j4p
+        template: pod-network-loss-j4p
+    - - arguments: {}
+        name: revert-chaos
+        template: revert-chaos
   - container:
       args:
-      - kubectl apply -f /tmp/pod-delete-j1k.yaml -n {{workflow.parameters.adminModeNamespace}}
+      - kubectl apply -f /tmp/pod-network-loss-j4p.yaml -n {{workflow.parameters.adminModeNamespace}}
         |  sleep 30
       command:
       - sh
       - -c
-      image: chaosnative/k8s:2.11.0
+      image: chaosnative/k8s:2.8.0
       name: ""
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-j1k
-        path: /tmp/pod-delete-j1k.yaml
+      - name: pod-network-loss-j4p
+        path: /tmp/pod-network-loss-j4p.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
             description:
               message: |
-                Deletes a pod belonging to a deployment/statefulset/daemonset
+                Injects network packet loss on pods belonging to an app deployment
             kind: ChaosExperiment
             metadata:
-              name: pod-delete
+              name: pod-network-loss
               labels:
-                name: pod-delete
+                name: pod-network-loss
                 app.kubernetes.io/part-of: litmus
                 app.kubernetes.io/component: chaosexperiment
                 app.kubernetes.io/version: latest
@@ -163,119 +168,113 @@ spec:
                 imagePullPolicy: Always
                 args:
                   - -c
-                  - ./experiments -name pod-delete
+                  - ./experiments -name pod-network-loss
                 command:
                   - /bin/bash
                 env:
-                  - name: TOTAL_CHAOS_DURATION
-                    value: "15"
-                  - name: RAMP_TIME
+                  - name: TARGET_CONTAINER
                     value: ""
-                  - name: FORCE
-                    value: "true"
-                  - name: CHAOS_INTERVAL
-                    value: "5"
-                  - name: PODS_AFFECTED_PERC
+                  - name: LIB_IMAGE
+                    value: chaosnative/go-runner:ci
+                  - name: NETWORK_INTERFACE
+                    value: eth0
+                  - name: TC_IMAGE
+                    value: gaiadocker/iproute2
+                  - name: NETWORK_PACKET_LOSS_PERCENTAGE
+                    value: "100"
+                  - name: TOTAL_CHAOS_DURATION
+                    value: "60"
+                  - name: RAMP_TIME
                     value: ""
                   - name: LIB
                     value: litmus
+                  - name: PODS_AFFECTED_PERC
+                    value: ""
                   - name: TARGET_PODS
                     value: ""
                   - name: NODE_LABEL
                     value: ""
+                  - name: CONTAINER_RUNTIME
+                    value: docker
+                  - name: DESTINATION_IPS
+                    value: ""
+                  - name: DESTINATION_HOSTS
+                    value: ""
+                  - name: SOCKET_PATH
+                    value: /var/run/docker.sock
                   - name: SEQUENCE
                     value: parallel
                 labels:
-                  name: pod-delete
+                  name: pod-network-loss
                   app.kubernetes.io/part-of: litmus
                   app.kubernetes.io/component: experiment-job
+                  app.kubernetes.io/runtime-api-usage: "true"
                   app.kubernetes.io/version: latest
     metadata: {}
     name: install-chaos-experiments
     outputs: {}
   - container:
       args:
-      - -file=/tmp/chaosengine-pod-delete-j1k.yaml
+      - -file=/tmp/chaosengine-pod-network-loss-j4p.yaml
       - -saveName=/tmp/engine-name
-      image: chaosnative/litmus-checker:2.11.0
+      image: chaosnative/litmus-checker:2.8.0
       name: ""
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-j1k
-        path: /tmp/chaosengine-pod-delete-j1k.yaml
+      - name: pod-network-loss-j4p
+        path: /tmp/chaosengine-pod-network-loss-j4p.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
             kind: ChaosEngine
             metadata:
               namespace: "{{workflow.parameters.adminModeNamespace}}"
-              generateName: pod-delete-j1k
+              generateName: pod-network-loss-j4p
               labels:
-                instance_id: 6605c43c-6eeb-4a49-af8e-cd90f70cd813
-                workflow_name: custom-1660055323
+                instance_id: 2ddbd260-defd-4237-974f-8207f226c7a1
+                workflow_name: nginx-pod-network-loss-1659943871
             spec:
-              appinfo:
-                appns: litmus
-                applabel: app=chaos-exporter
-                appkind: deployment
               engineState: active
+              appinfo:
+                appns: kube-system
+                applabel: k8s-app=kube-dns
+                appkind: deployment
               chaosServiceAccount: litmus-admin
               experiments:
-                - name: pod-delete
+                - name: pod-network-loss
                   spec:
                     components:
                       env:
                         - name: TOTAL_CHAOS_DURATION
-                          value: "30"
-                        - name: CHAOS_INTERVAL
-                          value: "10"
-                        - name: FORCE
-                          value: "false"
+                          value: "60"
+                        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+                          value: "100"
+                        - name: CONTAINER_RUNTIME
+                          value: docker
+                        - name: SOCKET_PATH
+                          value: /var/run/docker.sock
                         - name: PODS_AFFECTED_PERC
                           value: ""
-                    probe:
-                      - name: delete-pod
-                        type: httpProbe
-                        mode: Continuous
-                        runProperties:
-                          probeTimeout: 10
-                          retry: 5
-                          interval: 2
-                          stopOnFailure: false
-                        httpProbe/inputs:
-                          url: http://litmusportal-server-service.litmus.svc.cluster.local:9002/status
-                          insecureSkipVerify: false
-                          responseTimeout: 100
-                          method:
-                            get:
-                              criteria: ==
-                              responseCode: "200"
-                      - name: delete-pod-1
-                        type: cmdProbe
-                        mode: SOT
-                        runProperties:
-                          probeTimeout: 10
-                          retry: 5
-                          interval: 2
-                          stopOnFailure: false
-                        cmdProbe/inputs:
-                          command: curl google.com
-                          source:
-                            image: litmuschaos/k8s:latest
-                            hostNetwork: false
-                          comparator:
-                            type: string
-                            criteria: equal
-                            value: <HTML><HEAD><meta http-equiv="content-type"
-                              content="text/html;charset=utf-8"> <TITLE>301
-                              Moved</TITLE></HEAD><BODY> <H1>301 Moved</H1> The document has
-                              moved <A HREF="http://www.google.com/">here</A>.
-                              </BODY></HTML>
+                    probe: []
     metadata:
       labels:
         weight: "10"
-    name: pod-delete-j1k
+    name: pod-network-loss-j4p
+    outputs: {}
+  - container:
+      args:
+      - 'kubectl delete chaosengine -l ''instance_id in (2ddbd260-defd-4237-974f-8207f226c7a1,
+        )'' -n {{workflow.parameters.adminModeNamespace}} '
+      command:
+      - sh
+      - -c
+      image: chaosnative/k8s:2.8.0
+      name: ""
+      resources: {}
+    inputs: {}
+    metadata: {}
+    name: revert-chaos
     outputs: {}
 status:
   finishedAt: null
