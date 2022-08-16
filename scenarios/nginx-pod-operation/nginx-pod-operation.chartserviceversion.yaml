@@ -1,0 +1,45 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: nginx-pod-operation
+  version: ""
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: Hi, this is a workflow to target app=nginx deployment
+  chaosExpCRDLink: ""
+  chaosType: ""
+  displayName: nginx-pod-operation chaos
+  experiments:
+  - description: This workflow consists of pod-delete-jqe experiment
+    name: pod-delete-jqe
+  - description: This workflow consists of pod-cpu-hog-my2 experiment
+    name: pod-cpu-hog-my2
+  - description: This workflow consists of pod-network-loss-ukm experiment
+    name: pod-network-loss-ukm
+  - description: This workflow consists of pod-network-latency-xoq experiment
+    name: pod-network-latency-xoq
+  - description: This workflow consists of pod-network-corruption-0kl experiment
+    name: pod-network-corruption-0kl
+  keywords:
+  - app-nginx
+  - pod-operation
+  - pod-bye
+  links: null
+  maintainers:
+  - email: ""
+    name: Harness
+  maturity: ""
+  minKubeVersion: ""
+  platforms: null
+  provider:
+    name: ""
+  scenarios: null
