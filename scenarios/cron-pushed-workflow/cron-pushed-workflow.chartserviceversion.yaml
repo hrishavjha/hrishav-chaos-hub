@@ -1,0 +1,39 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: cron-pushed-workflow
+  version: ""
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: this is a cron workflow pushed to hub
+  chaosExpCRDLink: ""
+  chaosType: ""
+  displayName: cron-pushed-workflow chaos
+  experiments:
+  - description: This chaos scenario consists of pod-delete-9t9 experiment
+    name: pod-delete-9t9
+  - description: This chaos scenario consists of pod-cpu-hog-exec-fhf experiment
+    name: pod-cpu-hog-exec-fhf
+  keywords:
+  - test
+  - hi
+  - hello
+  links: null
+  maintainers:
+  - email: ""
+    name: Harness
+  maturity: ""
+  minKubeVersion: ""
+  platforms: null
+  provider:
+    name: ""
+  scenarios: null
