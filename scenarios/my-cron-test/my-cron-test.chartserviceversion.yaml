@@ -1,0 +1,36 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: my-cron-test
+  version: ""
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: hola
+  chaosExpCRDLink: ""
+  chaosType: ""
+  displayName: my-cron-test chaos
+  experiments:
+  - description: This chaos scenario consists of pod-cpu-hog-opc experiment
+    name: pod-cpu-hog-opc
+  keywords:
+  - demo
+  - test
+  links: null
+  maintainers:
+  - email: ""
+    name: Harness
+  maturity: ""
+  minKubeVersion: ""
+  platforms: null
+  provider:
+    name: ""
+  scenarios: null
