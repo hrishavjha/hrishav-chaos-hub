@@ -1,0 +1,34 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: tes-fix
+  version: ""
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: ""
+  chaosExpCRDLink: ""
+  chaosType: ""
+  displayName: tes-fix chaos
+  experiments:
+  - description: This chaos scenario consists of pod-delete-6f6 experiment
+    name: pod-delete-6f6
+  - description: This chaos scenario consists of container-kill-apw experiment
+    name: container-kill-apw
+  keywords: []
+  links: null
+  maintainers: null
+  maturity: ""
+  minKubeVersion: ""
+  platforms: null
+  provider:
+    name: ""
+  scenarios: null
