@@ -242,7 +242,7 @@ spec:
                         - name: VM_PASSWORD
                           value: "123"
                         - name: TARGET_HOSTNAMES
-                          value: google.com
+                          value: '["google.com"]'
                         - name: MATCH_SCHEME
                           value: substring
                         - name: PORT
