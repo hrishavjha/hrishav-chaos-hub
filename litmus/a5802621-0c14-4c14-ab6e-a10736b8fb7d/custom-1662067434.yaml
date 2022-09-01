@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     cluster_id: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
-    subject: custom_litmus
+    subject: custom-1662067434_litmus
     workflow_id: e831bb91-6539-487a-9d7c-9dea013402d9
     workflows.argoproj.io/controller-instanceid: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
   name: custom-1662067434
@@ -246,7 +246,7 @@ spec:
                         - name: VM_PASSWORD
                           value: "123"
                         - name: CPU_CORES
-                          value: "2"
+                          value: "0"
                         - name: CPU_LOAD
                           value: "100"
                         - name: SEQUENCE
