@@ -1,0 +1,33 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: test-test-1
+  version: ""
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: dadad
+  chaosExpCRDLink: ""
+  chaosType: ""
+  displayName: test-test-1 chaos
+  experiments: null
+  keywords:
+  - lala
+  links: null
+  maintainers:
+  - email: ""
+    name: Harness
+  maturity: ""
+  minKubeVersion: ""
+  platforms: null
+  provider:
+    name: ""
+  scenarios: null
