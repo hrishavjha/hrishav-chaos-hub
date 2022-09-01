@@ -253,7 +253,7 @@ spec:
                         - name: VM_PASSWORD
                           value: "123"
                         - name: PROCESS_IDS
-                          value: "857"
+                          value: 10084,10097
                         - name: SEQUENCE
                           value: parallel
                     probe: []
