@@ -233,9 +233,9 @@ spec:
                         - name: CHAOS_INTERVAL
                           value: "10"
                         - name: CLUSTER_NAME
-                          value: ""
+                          value: database-1
                         - name: RDS_INSTANCE_IDENTIFIER
-                          value: database-1,database-2
+                          value: db-reader-03,db-read-01
                         - name: REGION
                           value: us-east-1
                         - name: INSTANCE_AFFECTED_PERC
