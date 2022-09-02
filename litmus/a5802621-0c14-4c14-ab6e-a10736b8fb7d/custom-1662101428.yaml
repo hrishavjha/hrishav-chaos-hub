@@ -252,7 +252,7 @@ spec:
                         - name: NUMBER_OF_WORKERS
                           value: "4"
                         - name: VOLUME_MOUNT_PATH
-                          value: /tmp
+                          value: ""
                         - name: CPU_CORES
                           value: ""
                         - name: SEQUENCE
