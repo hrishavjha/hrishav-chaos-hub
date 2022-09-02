@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     cluster_id: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
-    subject: ec2-reset-peer_litmus
+    subject: ec2-reset-peer-1662117036_litmus
     workflow_id: dd5c6cf4-4f52-470f-9e27-3a5e0c401239
     workflows.argoproj.io/controller-instanceid: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
   name: ec2-reset-peer-1662117036
@@ -234,7 +234,7 @@ spec:
                         - name: TARGET_SERVICE_PORT
                           value: "80"
                         - name: RESET_TIMEOUT
-                          value: "2000"
+                          value: "2"
                         - name: SEQUENCE
                           value: parallel
                     probe: []
