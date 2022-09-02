@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     cluster_id: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
-    subject: rds-instance-delete_litmus
+    subject: rds-instance-delete-1662134111_litmus
     workflow_id: c13841a1-1955-48c7-a7c2-6120403de6aa
     workflows.argoproj.io/controller-instanceid: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
   name: rds-instance-delete-1662134111
@@ -233,13 +233,13 @@ spec:
                         - name: CHAOS_INTERVAL
                           value: "10"
                         - name: CLUSTER_NAME
-                          value: database-1
-                        - name: RDS_INSTANCE_IDENTIFIER
                           value: ""
+                        - name: RDS_INSTANCE_IDENTIFIER
+                          value: database-1,database-2
                         - name: REGION
                           value: us-east-1
                         - name: INSTANCE_AFFECTED_PERC
-                          value: "50"
+                          value: ""
                         - name: SEQUENCE
                           value: parallel
                     probe: []
