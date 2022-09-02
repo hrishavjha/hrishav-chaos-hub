@@ -234,7 +234,7 @@ spec:
                         - name: TARGET_SERVICE_PORT
                           value: "80"
                         - name: RESPONSE_BODY
-                          value: HIIIII
+                          value: <h1>hii</h1>
                         - name: SEQUENCE
                           value: parallel
                     probe: []
