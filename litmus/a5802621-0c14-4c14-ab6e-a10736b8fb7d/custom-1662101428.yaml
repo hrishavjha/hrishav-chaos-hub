@@ -248,11 +248,11 @@ spec:
                         - name: FILESYSTEM_UTILIZATION_PERCENTAGE
                           value: "60"
                         - name: FILESYSTEM_UTILIZATION_BYTES
-                          value: "3000"
+                          value: ""
                         - name: NUMBER_OF_WORKERS
                           value: "4"
                         - name: VOLUME_MOUNT_PATH
-                          value: ""
+                          value: /run
                         - name: CPU_CORES
                           value: ""
                         - name: SEQUENCE
