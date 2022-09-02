@@ -254,7 +254,7 @@ spec:
                         - name: VOLUME_MOUNT_PATH
                           value: ""
                         - name: CPU_CORES
-                          value: "4"
+                          value: ""
                         - name: SEQUENCE
                           value: parallel
                     probe: []
