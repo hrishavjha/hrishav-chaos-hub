@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     cluster_id: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
-    subject: ec2-http-modify-body_litmus
+    subject: ec2-http-modify-body-1662114245_litmus
     workflow_id: 0dcb2d7d-0686-422a-a3b3-632c7398bdbd
     workflows.argoproj.io/controller-instanceid: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
   name: ec2-http-modify-body-1662114245
@@ -222,9 +222,9 @@ spec:
                     components:
                       env:
                         - name: TOTAL_CHAOS_DURATION
-                          value: "30"
+                          value: "60"
                         - name: CHAOS_INTERVAL
-                          value: "10"
+                          value: "20"
                         - name: REGION
                           value: us-east-2
                         - name: EC2_INSTANCE_ID
