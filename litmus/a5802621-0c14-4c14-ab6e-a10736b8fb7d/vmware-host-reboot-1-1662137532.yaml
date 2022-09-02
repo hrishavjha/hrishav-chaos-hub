@@ -1,0 +1,248 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  creationTimestamp: null
+  labels:
+    cluster_id: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
+    subject: vmware-host-reboot-1_litmus
+    workflow_id: ccc11879-9478-4033-b22d-bee91c7d5a7d
+    workflows.argoproj.io/controller-instanceid: 5fa54a9d-063e-468b-9a80-a7ebca16ea82
+  name: vmware-host-reboot-1-1662137532
+  namespace: litmus
+spec:
+  arguments:
+    parameters:
+    - name: adminModeNamespace
+      value: litmus
+  entrypoint: custom-chaos
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: argo-chaos
+  templates:
+  - inputs: {}
+    metadata: {}
+    name: custom-chaos
+    outputs: {}
+    steps:
+    - - arguments: {}
+        name: install-chaos-experiments
+        template: install-chaos-experiments
+    - - arguments: {}
+        name: vmware-host-reboot-p2k
+        template: vmware-host-reboot-p2k
+  - container:
+      args:
+      - kubectl apply -f /tmp/vmware-host-reboot-p2k.yaml -n {{workflow.parameters.adminModeNamespace}}
+        &&  sleep 30
+      command:
+      - sh
+      - -c
+      image: chaosnative/k8s:2.12.0
+      name: ""
+      resources: {}
+    inputs:
+      artifacts:
+      - name: vmware-host-reboot-p2k
+        path: /tmp/vmware-host-reboot-p2k.yaml
+        raw:
+          data: |
+            apiVersion: litmuschaos.io/v1alpha1
+            description:
+              message: |
+                VMWare Host Reboot experiment causes a given VMWare ESX Host to reboot
+            kind: ChaosExperiment
+            metadata:
+              name: vmware-host-reboot
+              labels:
+                name: vmware-host-reboot
+                app.kubernetes.io/part-of: litmus
+                app.kubernetes.io/component: chaosexperiment
+                app.kubernetes.io/version: latest
+            spec:
+              definition:
+                scope: Namespaced
+                permissions:
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods
+                    verbs:
+                      - create
+                      - delete
+                      - get
+                      - list
+                      - patch
+                      - update
+                      - deletecollection
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - events
+                    verbs:
+                      - create
+                      - get
+                      - list
+                      - patch
+                      - update
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - configmaps
+                    verbs:
+                      - get
+                      - list
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods/log
+                    verbs:
+                      - get
+                      - list
+                      - watch
+                  - apiGroups:
+                      - apps
+                    resources:
+                      - deployments
+                      - statefulsets
+                      - replicasets
+                      - daemonsets
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - apps.openshift.io
+                    resources:
+                      - deploymentconfigs
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - replicationcontrollers
+                    verbs:
+                      - get
+                      - list
+                  - apiGroups:
+                      - argoproj.io
+                    resources:
+                      - rollouts
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - batch
+                    resources:
+                      - jobs
+                    verbs:
+                      - create
+                      - list
+                      - get
+                      - delete
+                      - deletecollection
+                  - apiGroups:
+                      - litmuschaos.io
+                    resources:
+                      - chaosengines
+                      - chaosexperiments
+                      - chaosresults
+                    verbs:
+                      - create
+                      - list
+                      - get
+                      - patch
+                      - update
+                      - delete
+                image: chaosnative/go-runner:ci
+                imagePullPolicy: Always
+                args:
+                  - -c
+                  - ./experiments -name vmware-host-reboot
+                command:
+                  - /bin/bash
+                env:
+                  - name: GOVC_URL
+                    valueFrom:
+                      secretKeyRef:
+                        name: vcenter-secret
+                        key: VCENTERSERVER
+                  - name: GOVC_USERNAME
+                    valueFrom:
+                      secretKeyRef:
+                        name: vcenter-secret
+                        key: VCENTERUSER
+                  - name: GOVC_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: vcenter-secret
+                        key: VCENTERPASS
+                  - name: GOVC_INSECURE
+                    value: "true"
+                  - name: LIB
+                    value: ""
+                  - name: RAMP_TIME
+                    value: ""
+                  - name: HOST_NAME
+                    value: ""
+                  - name: HOST_DATACENTER
+                    value: ""
+                  - name: HIGH_AVAILABILITY_CLUSTER
+                    value: ""
+                labels:
+                  name: vmware-host-reboot
+                  app.kubernetes.io/part-of: litmus
+                  app.kubernetes.io/component: experiment-job
+                  app.kubernetes.io/version: latest
+    metadata: {}
+    name: install-chaos-experiments
+    outputs: {}
+  - container:
+      args:
+      - -file=/tmp/chaosengine-vmware-host-reboot-p2k.yaml
+      - -saveName=/tmp/engine-name
+      image: chaosnative/litmus-checker:2.12.0
+      name: ""
+      resources: {}
+    inputs:
+      artifacts:
+      - name: vmware-host-reboot-p2k
+        path: /tmp/chaosengine-vmware-host-reboot-p2k.yaml
+        raw:
+          data: |
+            apiVersion: litmuschaos.io/v1alpha1
+            kind: ChaosEngine
+            metadata:
+              generateName: vmware-host-reboot-p2k
+              namespace: "{{workflow.parameters.adminModeNamespace}}"
+              labels:
+                workflow_run_id: "{{workflow.uid}}"
+                workflow_name: vmware-host-reboot-1-1662137532
+            spec:
+              engineState: active
+              auxiliaryAppInfo: ""
+              chaosServiceAccount: litmus-admin
+              jobCleanUpPolicy: retain
+              experiments:
+                - name: vmware-host-reboot
+                  spec:
+                    components:
+                      statusCheckTimeouts:
+                        delay: 2
+                        timeout: 400
+                      env:
+                        - name: HOST_NAME
+                          value: 103.195.244.210
+                        - name: HOST_DATACENTER
+                          value: Datacenter
+                        - name: HIGH_AVAILABILITY_CLUSTER
+                          value: ""
+                    probe: []
+    metadata:
+      labels:
+        weight: "10"
+    name: vmware-host-reboot-p2k
+    outputs: {}
+status:
+  finishedAt: null
+  startedAt: null
