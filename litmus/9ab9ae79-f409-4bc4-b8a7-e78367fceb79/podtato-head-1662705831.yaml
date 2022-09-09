@@ -13,7 +13,6 @@ spec:
   concurrencyPolicy: Forbid
   schedule: 13 12 1 * *
   startingDeadlineSeconds: 0
-  suspend: true
   timezone: Asia/Calcutta
   workflowMetadata:
     creationTimestamp: null
