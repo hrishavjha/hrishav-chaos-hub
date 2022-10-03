@@ -1,0 +1,38 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: ec2-dns-chaos
+  version: 0.1.0
+  annotations:
+    categories: ec2-dns-chaos
+    chartDescription: Injects dns chaos on an aws ec2 instance for a certain chaos duration
+spec:
+  displayName: ec2-dns-chaos
+  categoryDescription: >
+    This chaos scenario comprises of one chaos experiment that injects dns chaos on an aws ec2 instance. Use this scenario template, update the aws tunables to introduce dns error on the aws ec2 instance for target hosts.
+  experiments:
+    - name: ec2-dns-chaos
+      description: This chaos experiment perform dns error on an aws ec2 instance for a certain chaos duration.
+  keywords:
+    - AWS
+  platforms:
+    - GKE
+    - Minikube 
+    - Packet(Kubeadm)
+    - EKS
+    - AKS
+  maintainers:
+    - name: Udit Gaurav
+      email: udit.gaurav@harness.io
+    - name: Vedant Shrotria
+      email: vedant.shrotria@harness.io
+  provider:
+    name: Harness
+  links:
+    - name: Kubernetes Slack
+      url: https://slack.kubernetes.io/
+    - name: Documentation
+      url: https://docs.litmuschaos.io/docs/chaoshub/#generic-chaos
+  icon:
+    - url:
+      mediatype: ""

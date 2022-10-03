@@ -1,0 +1,37 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: aws-ecs-container-cpu-hog
+  version: 0.1.0
+  annotations:
+    categories: aws-ecs-container-cpu-hog
+    chartDescription: Injects cpu hog on an aws ecs container that holds the task
+spec:
+  displayName: aws-ecs-container-cpu-hog
+  categoryDescription: >
+    This chaos scenario comprises of one chaos experiment that injects cpu hog on an aws ecs container that holds the task. Use this scenario template, update the aws tunables to introduce stress chaos on the ecs task container.
+  experiments:
+    - name: ecs-container-cpu-hog
+      description: This chaos experiment perform cpu hog on an aws ecs task container for a certain chaos duration.
+  keywords:
+    - AWS
+
+  platforms:
+    - GKE
+    - Minikube 
+    - Packet(Kubeadm)
+    - EKS
+    - AKS
+  maintainers:
+    - name: Vedant Shrotria
+      email: vedant.shrotria@harness.io
+  provider:
+    name: Harness
+  links:
+    - name: Kubernetes Slack
+      url: https://slack.kubernetes.io/
+    - name: Documentation
+      url: https://docs.litmuschaos.io/docs/chaoshub/#generic-chaos
+  icon:
+    - url:
+      mediatype: ""

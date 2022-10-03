@@ -1,0 +1,31 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: aws-ebs-loss-by-id
+  version: 0.1.0
+  annotations:
+    categories: aws-ebs-loss-by-id
+    chartDescription: Injects aws EBS loss of EC2 instance for a certain chaos duration
+spec:
+  displayName: aws-ebs-loss-by-id
+  categoryDescription: >
+    This chaos scenario comprises of one chaos experiment that injects EBS loss identified by volume id. Use this scenario template, update the aws tunables to introduce EBS loss chaos.
+  experiments:
+    - name: ebs-loss-by-id
+      description: This chaos experiment perform AWS EBS loss instance id for a certain chaos duration.
+  keywords:
+    - AWS
+  platforms:
+    - GKE
+    - Minikube 
+    - Packet(Kubeadm)
+    - EKS
+    - AKS
+  maintainers:
+    - name: Udit Gaurav
+      email: udit.gaurav@harness.io
+  provider:
+    name: Harness
+  icon:
+    - url:
+      mediatype: ""

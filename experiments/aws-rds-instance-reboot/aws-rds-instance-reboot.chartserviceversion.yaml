@@ -1,0 +1,36 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: rds-instance-reboot
+  version: 0.1.0
+  annotations:
+    categories: rds-instance-reboot
+    chartDescription: Injects chaos on RDS instances
+spec:
+  displayName: rds-instance-reboot
+  categoryDescription: >
+    This chaos scenario comprises of one chaos experiment that injects instance reboot for RDS instances. Use this scenario template, update the AWS tunables to perform the RDS instance chaos.
+  experiments:
+    - name: rds-instance-reboot
+      description: This chaos experiment perform RDS instance reboot for a certain chaos duration on the target RDS cluster/instance .
+  keywords:
+    - AWS
+  platforms:
+    - GKE
+    - Minikube 
+    - Packet(Kubeadm)
+    - EKS
+    - AKS
+  maintainers:
+    - name: Adarshkumar14
+      email: adarsh.kumar@harness.io
+  provider:
+    name: Harness
+  links:
+    - name: Kubernetes Slack
+      url: https://slack.kubernetes.io/
+    - name: Documentation
+      url: https://docs.litmuschaos.io/docs/chaoshub/#generic-chaos
+  icon:
+    - url:
+      mediatype: ""

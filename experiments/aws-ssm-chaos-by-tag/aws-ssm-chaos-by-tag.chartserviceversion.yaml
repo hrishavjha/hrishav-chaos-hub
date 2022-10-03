@@ -1,0 +1,31 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: aws-ssm-chaos-by-tag
+  version: 0.1.0
+  annotations:
+    categories: aws-ssm-chaos-by-tag
+    chartDescription: Injects different chaos on AWS EC2 instances
+spec:
+  displayName: aws-ssm-chaos-by-tag
+  categoryDescription: >
+    This chaos scenario comprises of one chaos experiment that injects different faults in VMs using AWS SSM service. Use this scenario template, update the aws tunables to introduce aws ssm chaos.
+  experiments:
+    - name: aws-ssm-chaos-by-tag
+      description: This chaos experiment perform different kind of faults on an AWS EC2 instance selected by tag. It can be used to check the resiliency of the instance.
+  keywords:
+    - AWS
+  platforms:
+    - GKE
+    - Minikube 
+    - Packet(Kubeadm)
+    - EKS
+    - AKS
+  maintainers:
+    - name: uditgaurav
+      email: udit.gaurav@harness.io
+  provider:
+    name: Harness
+  icon:
+    - url:
+      mediatype: ""

@@ -1,0 +1,252 @@
+kind: Workflow
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: ecs-container-memory-hog-1658156903
+  namespace: litmus
+  creationTimestamp: null
+  labels:
+    subject: ecs-container-memory-hog_litmus
+spec:
+  templates:
+    - name: custom-chaos
+      steps:
+        - - name: install-chaos-experiments
+            template: install-chaos-experiments
+        - - name: ecs-container-memory-hog-9cr
+            template: ecs-container-memory-hog-9cr
+        - - name: revert-chaos
+            template: revert-chaos
+    - name: install-chaos-experiments
+      inputs:
+        artifacts:
+          - name: ecs-container-memory-hog-9cr
+            path: /tmp/ecs-container-memory-hog-9cr.yaml
+            raw:
+              data: |
+                apiVersion: litmuschaos.io/v1alpha1
+                description:
+                  message: |
+                    Inject memory hog on the aws ecs task containers.
+                kind: ChaosExperiment
+                metadata:
+                  name: ecs-container-memory-hog
+                  labels:
+                    name: ecs-container-memory-hog
+                    app.kubernetes.io/part-of: litmus
+                    app.kubernetes.io/component: chaosexperiment
+                    app.kubernetes.io/version: ci
+                spec:
+                  definition:
+                    scope: Namespaced
+                    permissions:
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods
+                        verbs:
+                          - create
+                          - delete
+                          - get
+                          - list
+                          - patch
+                          - update
+                          - deletecollection
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - events
+                        verbs:
+                          - create
+                          - get
+                          - list
+                          - patch
+                          - update
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - configmaps
+                        verbs:
+                          - get
+                          - list
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods/log
+                        verbs:
+                          - get
+                          - list
+                          - watch
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods/exec
+                        verbs:
+                          - get
+                          - list
+                          - create
+                      - apiGroups:
+                          - apps
+                        resources:
+                          - deployments
+                          - statefulsets
+                          - replicasets
+                          - daemonsets
+                        verbs:
+                          - list
+                          - get
+                      - apiGroups:
+                          - apps.openshift.io
+                        resources:
+                          - deploymentconfigs
+                        verbs:
+                          - list
+                          - get
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - replicationcontrollers
+                        verbs:
+                          - get
+                          - list
+                      - apiGroups:
+                          - argoproj.io
+                        resources:
+                          - rollouts
+                        verbs:
+                          - list
+                          - get
+                      - apiGroups:
+                          - batch
+                        resources:
+                          - jobs
+                        verbs:
+                          - create
+                          - list
+                          - get
+                          - delete
+                          - deletecollection
+                      - apiGroups:
+                          - litmuschaos.io
+                        resources:
+                          - chaosengines
+                          - chaosexperiments
+                          - chaosresults
+                        verbs:
+                          - create
+                          - list
+                          - get
+                          - patch
+                          - update
+                          - delete
+                    image: chaosnative/go-runner:ci
+                    imagePullPolicy: Always
+                    args:
+                      - -c
+                      - ./experiments -name ecs-container-memory-hog
+                    command:
+                      - /bin/bash
+                    env:
+                      - name: TOTAL_CHAOS_DURATION
+                        value: "30"
+                      - name: RAMP_TIME
+                        value: ""
+                      - name: CHAOS_INTERVAL
+                        value: "10"
+                      - name: LIB
+                        value: litmus
+                      - name: AWS_SHARED_CREDENTIALS_FILE
+                        value: /tmp/cloud_config.yml
+                    labels:
+                      name: ecs-container-memory-hog
+                      app.kubernetes.io/part-of: litmus
+                      app.kubernetes.io/component: experiment-job
+                      app.kubernetes.io/version: ci
+                    secrets:
+                      - name: cloud-secret
+                        mountPath: /tmp/
+      container:
+        name: ""
+        image: chaosnative/k8s:2.13.0
+        command:
+          - sh
+          - -c
+        args:
+          - kubectl apply -f /tmp/ecs-container-memory-hog-9cr.yaml -n
+            {{workflow.parameters.adminModeNamespace}} && sleep 30
+    - name: ecs-container-memory-hog-9cr
+      inputs:
+        artifacts:
+          - name: ecs-container-memory-hog-9cr
+            path: /tmp/chaosengine-ecs-container-memory-hog-9cr.yaml
+            raw:
+              data: |
+                apiVersion: litmuschaos.io/v1alpha1
+                kind: ChaosEngine
+                metadata:
+                  namespace: "{{workflow.parameters.adminModeNamespace}}"
+                  generateName: ecs-container-memory-hog-9cr
+                  labels:
+                    instance_id: fe4d383e-5b84-4d23-b391-0e5743904ef4
+                    context: ecs-container-memory-hog-9cr_litmus
+                    workflow_name: ecs-container-memory-hog-1658156903
+                spec:
+                  engineState: active
+                  chaosServiceAccount: litmus-admin
+                  experiments:
+                    - name: ecs-container-memory-hog
+                      spec:
+                        components:
+                          env:
+                            - name: TOTAL_CHAOS_DURATION
+                              value: "30"
+                            - name: CHAOS_INTERVAL
+                              value: "10"
+                            - name: CLUSTER_NAME
+                              value: ""
+                            - name: SERVICE_NAME
+                              value: ""
+                            - name: REGION
+                              value: ""
+                            - name: MEMORY_CONSUMPTION
+                              value: "100"
+                            - name: NUMBER_OF_WORKERS
+                              value: "1"
+                            - name: MEMORY_PERCENTAGE
+                              value: "0"
+                            - name: INSTALL_DEPENDENCIES
+                              value: "True"
+                            - name: SEQUENCE
+                              value: parallel
+                        probe: []
+                  annotationCheck: "false"
+      metadata:
+        labels:
+          weight: "10"
+      container:
+        name: ""
+        image: chaosnative/litmus-checker:2.13.0
+        args:
+          - -file=/tmp/chaosengine-ecs-container-memory-hog-9cr.yaml
+          - -saveName=/tmp/engine-name
+    - name: revert-chaos
+      container:
+        name: ""
+        image: chaosnative/k8s:latest
+        command:
+          - sh
+          - -c
+        args:
+          - "kubectl delete chaosengine -l 'instance_id in
+            (fe4d383e-5b84-4d23-b391-0e5743904ef4, )' -n
+            {{workflow.parameters.adminModeNamespace}} "
+  entrypoint: custom-chaos
+  arguments:
+    parameters:
+      - name: adminModeNamespace
+        value: litmus
+  serviceAccountName: argo-chaos
+  podGC:
+    strategy: OnWorkflowCompletion
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true

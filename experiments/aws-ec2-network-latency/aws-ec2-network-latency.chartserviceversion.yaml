@@ -1,0 +1,36 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: aws-ec2-network-latency
+  version: 0.1.0
+  annotations:
+    categories: aws-ec2-network-latency
+    chartDescription: Injects network latency on an aws ec2 instance for a certain chaos duration
+spec:
+  displayName: aws-ec2-network-latency
+  categoryDescription: >
+    This chaos scenario comprises of one chaos experiment that injects network latency on an aws ec2 instance. Use this scenario template, update the aws tunables to introduce network latency on the aws ec2 instance.
+  experiments:
+    - name: ec2-network-latency
+      description: This chaos experiment perform network latency on an aws ec2 instance for a certain chaos duration.
+  keywords:
+    - AWS
+  platforms:
+    - GKE
+    - Minikube 
+    - Packet(Kubeadm)
+    - EKS
+    - AKS
+  maintainers:
+    - name: Vedant Shrotria
+      email: vedant.shrotria@harness.io
+  provider:
+    name: Harness
+  links:
+    - name: Kubernetes Slack
+      url: https://slack.kubernetes.io/
+    - name: Documentation
+      url: https://docs.litmuschaos.io/docs/chaoshub/#generic-chaos
+  icon:
+    - url:
+      mediatype: ""

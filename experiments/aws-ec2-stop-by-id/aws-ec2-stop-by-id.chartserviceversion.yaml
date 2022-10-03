@@ -1,0 +1,37 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: aws-ec2-stop-by-id
+  version: 0.1.0
+  annotations:
+    categories: aws-ec2-stop-by-id
+    chartDescription: Injects aws ec2 instance stop for a certain chaos duration
+spec:
+  displayName: aws-ec2-stop-by-id
+  categoryDescription: >
+    This chaos scenario comprises of one chaos experiment that injects ec2 instance stop identified by id. Use this scenario template, update the aws tunables to introduce instance stop chaos on the aws ec2 instance.
+  experiments:
+    - name: ec2-stop-by-id
+      description: This chaos experiment perform aws ec2 instance stop by instance id for a certain chaos duration.
+  keywords:
+    - AWS
+
+  platforms:
+    - GKE
+    - Minikube 
+    - Packet(Kubeadm)
+    - EKS
+    - AKS
+  maintainers:
+    - name: Udit Gaurav
+      email: udit.gaurav@harness.io
+  provider:
+    name: Harness
+  links:
+    - name: Kubernetes Slack
+      url: https://slack.kubernetes.io/
+    - name: Documentation
+      url: https://docs.litmuschaos.io/docs/chaoshub/#generic-chaos
+  icon:
+    - url:
+      mediatype: ""
