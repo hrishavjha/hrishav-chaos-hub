@@ -1,0 +1,41 @@
+apiVersion: litmuchaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  name: node-network-loss
+  version: 0.1.0
+  annotations:
+    categories: Kubernetes
+    vendor: Harness
+spec:
+  displayName: node-network-loss
+  categoryDescription: >
+    Injects network packet loss on the provided nodes for a certain chaos duration.
+  keywords:
+    - Kubernetes
+
+  platforms:
+    - GKE
+    - AWS(KOPS)
+    - Packet(Kubeadm)
+    - Konvoy
+    - EKS
+    - AKS
+  scenarios:
+    - k8s-node-network-loss
+  chaosType: infra
+  maintainers:
+    - name: uditgaurav
+      email: udit.gaurav@harness.io
+  minKubeVersion: 1.12.0
+  provider:
+    name: Harness
+  labels:
+    app.kubernetes.io/component: chartserviceversion
+    app.kubernetes.io/version: ci
+  links:
+    - name: Documentation
+      url: https://docs.harness.io/category/kl0mxwpfw1-hce-category
+  icon:
+    - url: ""
+      mediatype: ""
+  chaosexpcrdlink: https://raw.githubusercontent.com/wings-software/enterprise-chaos-hub/main/experiments/kubernetes/node-network-loss/experiment.yaml 
