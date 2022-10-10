@@ -9,7 +9,7 @@ metadata:
 spec:
   displayName: node-network-loss
   categoryDescription: >
-    Injects network packet loss on the provided nodes for a certain chaos duration.
+    Node network loss fault injects network packet loss for the provided nodes through a certain chaos duration.
   keywords:
     - Kubernetes
 
@@ -20,15 +20,10 @@ spec:
     - Konvoy
     - EKS
     - AKS
-  scenarios:
+  experiments:
     - k8s-node-network-loss
   chaosType: infra
-  maintainers:
-    - name: uditgaurav
-      email: udit.gaurav@harness.io
   minKubeVersion: 1.12.0
-  provider:
-    name: Harness
   labels:
     app.kubernetes.io/component: chartserviceversion
     app.kubernetes.io/version: ci
@@ -38,4 +33,3 @@ spec:
   icon:
     - url: ""
       mediatype: ""
-  chaosexpcrdlink: https://raw.githubusercontent.com/wings-software/enterprise-chaos-hub/main/experiments/kubernetes/node-network-loss/experiment.yaml 

@@ -8,15 +8,10 @@ metadata:
 spec:
   displayName: pod-dns-spoof
   categoryDescription: >
-    Pod DNS Spoof can spoof particular dns requests in target pod container to desired target hostnames
+    Pod DNS Spoof fault spoofs particular DNS requests in a target pod container to desired target hostnames.
   keywords:
     - Kubernetes
   minKubeVersion: 1.12.0
-  provider:
-    name: Harness
-  maintainers:
-    - name: ksatchit
-      email: karthik.s@harness.io
   labels:
     app.kubernetes.io/component: chartserviceversion
     app.kubernetes.io/version: ci
@@ -26,4 +21,3 @@ spec:
   icon:
     - base64data: ""
       mediatype: ""
-  chaosexpcrdlink: https://raw.githubusercontent.com/litmuschaos/chaos-charts/master/charts/generic/pod-dns-error/experiment.yaml

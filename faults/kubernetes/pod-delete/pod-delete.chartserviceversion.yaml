@@ -9,7 +9,7 @@ metadata:
 spec:
   displayName: pod-delete
   categoryDescription: |
-    Pod delete contains chaos to disrupt state of kubernetes resources. Experiments can inject random pod delete failures against specified application.
+    Pod delete fault disrupts the state of Kubernetes resources. This fault injects random pod delete failures against specified application.
     - Causes (forced/graceful) pod failure of random replicas of an application deployment.
     - Tests deployment sanity (replica availability & uninterrupted service) and recovery workflows of the application pod.
  
@@ -26,14 +26,9 @@ spec:
     - Kind
     - Rancher
     - OpenShift(OKD)
-  maintainers:
-    - name: ksatchit
-      email: karthik.s@harness.io
-  scenarios:
+  experiments:
     - nginx-pod-delete
   minKubeVersion: 1.12.0
-  provider:
-    name: Harness
   labels:
     app.kubernetes.io/component: chartserviceversion
     app.kubernetes.io/version: ci
@@ -44,4 +39,3 @@ spec:
   icon:
     - url: 
       mediatype: ""
-  chaosexpcrdlink: https://raw.githubusercontent.com/wings-software/enterprise-chaos-hub/main/experiments/kubernetes/pod-delete/experiment.yaml 

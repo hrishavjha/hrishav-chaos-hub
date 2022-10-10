@@ -39,3 +39,22 @@ spec:
              ## percentage of total pods to target
             - name: PODS_AFFECTED_PERC
               value: ""
+          probe:
+            - name: healthcheck
+              type: cmdProbe
+              mode: Edge
+              runProperties:
+                probeTimeout: 180
+                retry: 0
+                interval: 1
+                stopOnFailure: true
+              cmdProbe/inputs:
+                command: ./healthcheck -name pod-level
+                source:
+                  image: chaosnative/go-runner:ci
+                  inheritInputs: true
+                comparator:
+                  type: string
+                  criteria: contains
+                  value: "[P000]"
+

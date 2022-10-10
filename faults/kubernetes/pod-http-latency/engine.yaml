@@ -3,10 +3,10 @@ kind: ChaosEngine
 metadata:
   name: nginx-http-chaos
   namespace: default
-spec: 
+spec:
   # It can be active/stop
   engineState: 'active'
-  appinfo: 
+  appinfo:
     appns: 'default'
     # FYI, To see app label, apply kubectl get pods --show-labels
     applabel: 'app=nginx'
@@ -19,7 +19,7 @@ spec:
           env:
             - name: TOTAL_CHAOS_DURATION
               value: '60' # in seconds
-            
+
             - name: LATENCY
               value: '2000' #in ms
 
@@ -39,3 +39,21 @@ spec:
              ## percentage of total pods to target
             - name: PODS_AFFECTED_PERC
               value: ''
+          probe:
+            - name: healthcheck
+              type: cmdProbe
+              mode: Edge
+              runProperties:
+                probeTimeout: 180
+                retry: 0
+                interval: 1
+                stopOnFailure: true
+              cmdProbe/inputs:
+                command: ./healthcheck -name pod-level
+                source:
+                  image: chaosnative/go-runner:ci
+                  inheritInputs: true
+                comparator:
+                  type: string
+                  criteria: contains
+                  value: "[P000]"

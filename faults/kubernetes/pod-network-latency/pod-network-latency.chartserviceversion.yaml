@@ -9,8 +9,8 @@ metadata:
 spec:
   displayName: pod-network-latency
   categoryDescription: |
-    Pod-network-latency contains chaos to disrupt network connectivity of kubernetes pods. Experiments can inject random network delays on the app replica pods. 
-    - Causes flaky access to application replica by injecting network delay using pumba.
+    Pod-network-latency fault disrupts network connectivity of Kubernetes pods. This fault injects random network delays on the app replica pods.
+    - Causes flaky access to application replica by injecting network delay using Pumba.
     - The application pod should be healthy once chaos is stopped. Service-requests should be served despite chaos.
   keywords:
     - Kubernetes
@@ -21,12 +21,7 @@ spec:
     - Packet(Kubeadm)
     - EKS
     - AKS
-  maintainers:
-    - name: ksatchit
-      email: karthik.s@harness.io
   minKubeVersion: 1.12.0
-  provider:
-    name: Mayadata
   labels:
     app.kubernetes.io/component: chartserviceversion
     app.kubernetes.io/version: ci
@@ -36,4 +31,3 @@ spec:
   icon:
     - base64data: ""
       mediatype: ""
-  chaosexpcrdlink: https://raw.githubusercontent.com/litmuschaos/chaos-charts/master/charts/generic/pod-network-latency/experiment.yaml

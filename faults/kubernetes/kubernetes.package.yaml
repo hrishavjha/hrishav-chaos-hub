@@ -1,5 +1,5 @@
 packageName: kubernetes
-experiments:
+faults:
   - name: pod-delete
     CSV: pod-delete.chartserviceversion.yaml
     desc: "pod-delete"
