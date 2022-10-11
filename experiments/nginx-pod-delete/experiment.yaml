@@ -1,7 +1,7 @@
 kind: Workflow
 apiVersion: argoproj.io/v1alpha1
 metadata:
-  name: pod-delete-workflow-1657185180
+  name: nginx-pod-delete
   namespace: litmus
   creationTimestamp: null
   labels:
