@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     infra_id: b8da9aa7-92f4-4255-a9e8-659fdcae8c6c
-    revision_id: bf2cc7ea-5581-4f6d-9ed5-9d9fb1ea9441
+    revision_id: 4933e685-86a0-405e-bb27-11d85d9f30bc
   name: test-ad
   namespace: ved-qa1
 spec:
@@ -12,7 +12,7 @@ spec:
     parameters:
     - name: adminModeNamespace
       value: ved-qa1
-  entrypoint: test-test-01
+  entrypoint: vedant-exp-test-audit-create
   podGC:
     strategy: OnWorkflowCompletion
   securityContext:
@@ -22,18 +22,18 @@ spec:
   templates:
   - inputs: {}
     metadata: {}
-    name: test-test-01
+    name: vedant-exp-test-audit-create
     outputs: {}
     steps:
     - - arguments: {}
         name: install-chaos-faults
         template: install-chaos-faults
     - - arguments: {}
-        name: pod-delete-1hs
-        template: pod-delete-1hs
-      - arguments: {}
-        name: pod-autoscaler-hpi
-        template: pod-autoscaler-hpi
+        name: pod-delete-ct4
+        template: pod-delete-ct4
+    - - arguments: {}
+        name: pod-delete-eti
+        template: pod-delete-eti
     - - arguments: {}
         name: cleanup-chaos-resources
         template: cleanup-chaos-resources
@@ -49,8 +49,8 @@ spec:
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-1hs
-        path: /tmp/pod-delete-1hs.yaml
+      - name: pod-delete-ct4
+        path: /tmp/pod-delete-ct4.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
@@ -203,25 +203,25 @@ spec:
                   app.kubernetes.io/part-of: litmus
                   app.kubernetes.io/component: experiment-job
                   app.kubernetes.io/version: ci
-      - name: pod-autoscaler-hpi
-        path: /tmp/pod-autoscaler-hpi.yaml
+      - name: pod-delete-eti
+        path: /tmp/pod-delete-eti.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
             description:
               message: |
-                Scale the application replicas and test the node autoscaling on cluster
+                Deletes a pod belonging to a deployment/statefulset/daemonset
             kind: ChaosExperiment
             metadata:
-              name: pod-autoscaler
+              name: pod-delete
               labels:
-                name: pod-autoscaler
+                name: pod-delete
                 app.kubernetes.io/part-of: litmus
                 app.kubernetes.io/component: chaosexperiment
                 app.kubernetes.io/version: ci
             spec:
               definition:
-                scope: Cluster
+                scope: Namespaced
                 permissions:
                   - apiGroups:
                       - ""
@@ -273,11 +273,32 @@ spec:
                     resources:
                       - deployments
                       - statefulsets
+                      - replicasets
+                      - daemonsets
                     verbs:
                       - list
                       - get
-                      - patch
-                      - update
+                  - apiGroups:
+                      - apps.openshift.io
+                    resources:
+                      - deploymentconfigs
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - replicationcontrollers
+                    verbs:
+                      - get
+                      - list
+                  - apiGroups:
+                      - argoproj.io
+                    resources:
+                      - rollouts
+                    verbs:
+                      - list
+                      - get
                   - apiGroups:
                       - batch
                     resources:
@@ -305,22 +326,34 @@ spec:
                 imagePullPolicy: Always
                 args:
                   - -c
-                  - ./experiments -name pod-autoscaler
+                  - ./experiments -name pod-delete
                 command:
                   - /bin/bash
                 env:
                   - name: TOTAL_CHAOS_DURATION
-                    value: "60"
+                    value: "15"
                   - name: RAMP_TIME
                     value: ""
-                  - name: REPLICA_COUNT
+                  - name: FORCE
+                    value: "true"
+                  - name: CHAOS_INTERVAL
                     value: "5"
+                  - name: PODS_AFFECTED_PERC
+                    value: ""
                   - name: LIB
                     value: litmus
+                  - name: TARGET_CONTAINER
+                    value: ""
+                  - name: TARGET_PODS
+                    value: ""
                   - name: DEFAULT_HEALTH_CHECK
                     value: "false"
+                  - name: NODE_LABEL
+                    value: ""
+                  - name: SEQUENCE
+                    value: parallel
                 labels:
-                  name: pod-autoscaler
+                  name: pod-delete
                   app.kubernetes.io/part-of: litmus
                   app.kubernetes.io/component: experiment-job
                   app.kubernetes.io/version: ci
@@ -342,29 +375,29 @@ spec:
     outputs: {}
   - container:
       args:
-      - -file=/tmp/chaosengine-pod-delete-1hs.yaml
+      - -file=/tmp/chaosengine-pod-delete-ct4.yaml
       - -saveName=/tmp/engine-name
       image: chaosnative/litmus-checker:2.11.0
       name: ""
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-1hs
-        path: /tmp/chaosengine-pod-delete-1hs.yaml
+      - name: pod-delete-ct4
+        path: /tmp/chaosengine-pod-delete-ct4.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
             kind: ChaosEngine
             metadata:
               namespace: "{{workflow.parameters.adminModeNamespace}}"
-              generateName: pod-delete-1hs
+              generateName: pod-delete-ct4
               labels:
                 workflow_run_id: "{{ workflow.uid }}"
-                workflow_name: test-test-01
+                workflow_name: vedant-exp-test-audit-create
             spec:
               appinfo:
-                appns: ved-qa1
-                applabel: app=disk-fill
+                appns: default
+                applabel: app=nginx
                 appkind: deployment
               engineState: active
               chaosServiceAccount: litmus-admin
@@ -402,46 +435,49 @@ spec:
     metadata:
       labels:
         weight: "10"
-    name: pod-delete-1hs
+    name: pod-delete-ct4
     outputs: {}
   - container:
       args:
-      - -file=/tmp/chaosengine-pod-autoscaler-hpi.yaml
+      - -file=/tmp/chaosengine-pod-delete-eti.yaml
       - -saveName=/tmp/engine-name
       image: chaosnative/litmus-checker:2.11.0
       name: ""
       resources: {}
     inputs:
       artifacts:
-      - name: pod-autoscaler-hpi
-        path: /tmp/chaosengine-pod-autoscaler-hpi.yaml
+      - name: pod-delete-eti
+        path: /tmp/chaosengine-pod-delete-eti.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
             kind: ChaosEngine
             metadata:
               namespace: "{{workflow.parameters.adminModeNamespace}}"
-              generateName: pod-autoscaler-hpi
+              generateName: pod-delete-eti
               labels:
                 workflow_run_id: "{{ workflow.uid }}"
-                workflow_name: test-test-01
+                workflow_name: vedant-exp-test-audit-create
             spec:
-              engineState: active
-              auxiliaryAppInfo: ""
               appinfo:
-                appns: ved-qa1
-                applabel: app=udit
+                appns: default
+                applabel: app=nginx
                 appkind: deployment
+              engineState: active
               chaosServiceAccount: litmus-admin
               experiments:
-                - name: pod-autoscaler
+                - name: pod-delete
                   spec:
                     components:
                       env:
                         - name: TOTAL_CHAOS_DURATION
+                          value: "30"
+                        - name: CHAOS_INTERVAL
                           value: "10"
-                        - name: REPLICA_COUNT
-                          value: "2"
+                        - name: FORCE
+                          value: "false"
+                        - name: PODS_AFFECTED_PERC
+                          value: ""
                     probe:
                       - name: healthcheck
                         type: cmdProbe
@@ -463,7 +499,7 @@ spec:
     metadata:
       labels:
         weight: "10"
-    name: pod-autoscaler-hpi
+    name: pod-delete-eti
     outputs: {}
 status:
   finishedAt: null

@@ -18,10 +18,11 @@ spec:
   experiments: null
   faults:
   - description: ""
-    name: pod-delete-1hs
+    name: pod-delete-ct4
   - description: ""
-    name: pod-autoscaler-hpi
-  keywords: []
+    name: pod-delete-eti
+  keywords:
+  - test
   provider:
     name: ""
   scenarios: null
