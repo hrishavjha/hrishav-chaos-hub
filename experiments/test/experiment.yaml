@@ -3,16 +3,16 @@ kind: Workflow
 metadata:
   creationTimestamp: null
   labels:
-    infra_id: b8da9aa7-92f4-4255-a9e8-659fdcae8c6c
-    revision_id: bf2cc7ea-5581-4f6d-9ed5-9d9fb1ea9441
+    infra_id: 86fb431c-011b-492e-b8db-102e3f00eb7d
+    revision_id: 242e8d7a-63d2-4bf7-99cd-cd8630ad3a88
   name: test
-  namespace: ved-qa1
+  namespace: hce
 spec:
   arguments:
     parameters:
     - name: adminModeNamespace
-      value: ved-qa1
-  entrypoint: test-test-01
+      value: hce
+  entrypoint: demo-amit-pprof
   podGC:
     strategy: OnWorkflowCompletion
   securityContext:
@@ -22,18 +22,15 @@ spec:
   templates:
   - inputs: {}
     metadata: {}
-    name: test-test-01
+    name: demo-amit-pprof
     outputs: {}
     steps:
     - - arguments: {}
         name: install-chaos-faults
         template: install-chaos-faults
     - - arguments: {}
-        name: pod-delete-1hs
-        template: pod-delete-1hs
-      - arguments: {}
-        name: pod-autoscaler-hpi
-        template: pod-autoscaler-hpi
+        name: pod-delete-419
+        template: pod-delete-419
     - - arguments: {}
         name: cleanup-chaos-resources
         template: cleanup-chaos-resources
@@ -49,8 +46,8 @@ spec:
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-1hs
-        path: /tmp/pod-delete-1hs.yaml
+      - name: pod-delete-419
+        path: /tmp/pod-delete-419.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
@@ -203,127 +200,6 @@ spec:
                   app.kubernetes.io/part-of: litmus
                   app.kubernetes.io/component: experiment-job
                   app.kubernetes.io/version: ci
-      - name: pod-autoscaler-hpi
-        path: /tmp/pod-autoscaler-hpi.yaml
-        raw:
-          data: |
-            apiVersion: litmuschaos.io/v1alpha1
-            description:
-              message: |
-                Scale the application replicas and test the node autoscaling on cluster
-            kind: ChaosExperiment
-            metadata:
-              name: pod-autoscaler
-              labels:
-                name: pod-autoscaler
-                app.kubernetes.io/part-of: litmus
-                app.kubernetes.io/component: chaosexperiment
-                app.kubernetes.io/version: ci
-            spec:
-              definition:
-                scope: Cluster
-                permissions:
-                  - apiGroups:
-                      - ""
-                    resources:
-                      - pods
-                    verbs:
-                      - create
-                      - delete
-                      - get
-                      - list
-                      - patch
-                      - update
-                      - deletecollection
-                  - apiGroups:
-                      - ""
-                    resources:
-                      - events
-                    verbs:
-                      - create
-                      - get
-                      - list
-                      - patch
-                      - update
-                  - apiGroups:
-                      - ""
-                    resources:
-                      - configmaps
-                    verbs:
-                      - get
-                      - list
-                  - apiGroups:
-                      - ""
-                    resources:
-                      - pods/log
-                    verbs:
-                      - get
-                      - list
-                      - watch
-                  - apiGroups:
-                      - ""
-                    resources:
-                      - pods/exec
-                    verbs:
-                      - get
-                      - list
-                      - create
-                  - apiGroups:
-                      - apps
-                    resources:
-                      - deployments
-                      - statefulsets
-                    verbs:
-                      - list
-                      - get
-                      - patch
-                      - update
-                  - apiGroups:
-                      - batch
-                    resources:
-                      - jobs
-                    verbs:
-                      - create
-                      - list
-                      - get
-                      - delete
-                      - deletecollection
-                  - apiGroups:
-                      - litmuschaos.io
-                    resources:
-                      - chaosengines
-                      - chaosexperiments
-                      - chaosresults
-                    verbs:
-                      - create
-                      - list
-                      - get
-                      - patch
-                      - update
-                      - delete
-                image: chaosnative/go-runner:ci
-                imagePullPolicy: Always
-                args:
-                  - -c
-                  - ./experiments -name pod-autoscaler
-                command:
-                  - /bin/bash
-                env:
-                  - name: TOTAL_CHAOS_DURATION
-                    value: "60"
-                  - name: RAMP_TIME
-                    value: ""
-                  - name: REPLICA_COUNT
-                    value: "5"
-                  - name: LIB
-                    value: litmus
-                  - name: DEFAULT_HEALTH_CHECK
-                    value: "false"
-                labels:
-                  name: pod-autoscaler
-                  app.kubernetes.io/part-of: litmus
-                  app.kubernetes.io/component: experiment-job
-                  app.kubernetes.io/version: ci
     metadata: {}
     name: install-chaos-faults
     outputs: {}
@@ -342,29 +218,29 @@ spec:
     outputs: {}
   - container:
       args:
-      - -file=/tmp/chaosengine-pod-delete-1hs.yaml
+      - -file=/tmp/chaosengine-pod-delete-419.yaml
       - -saveName=/tmp/engine-name
       image: chaosnative/litmus-checker:2.11.0
       name: ""
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-1hs
-        path: /tmp/chaosengine-pod-delete-1hs.yaml
+      - name: pod-delete-419
+        path: /tmp/chaosengine-pod-delete-419.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
             kind: ChaosEngine
             metadata:
               namespace: "{{workflow.parameters.adminModeNamespace}}"
-              generateName: pod-delete-1hs
+              generateName: pod-delete-419
               labels:
                 workflow_run_id: "{{ workflow.uid }}"
-                workflow_name: test-test-01
+                workflow_name: demo-amit-pprof
             spec:
               appinfo:
-                appns: ved-qa1
-                applabel: app=disk-fill
+                appns: hce
+                applabel: app=chaos-exporter
                 appkind: deployment
               engineState: active
               chaosServiceAccount: litmus-admin
@@ -402,68 +278,7 @@ spec:
     metadata:
       labels:
         weight: "10"
-    name: pod-delete-1hs
-    outputs: {}
-  - container:
-      args:
-      - -file=/tmp/chaosengine-pod-autoscaler-hpi.yaml
-      - -saveName=/tmp/engine-name
-      image: chaosnative/litmus-checker:2.11.0
-      name: ""
-      resources: {}
-    inputs:
-      artifacts:
-      - name: pod-autoscaler-hpi
-        path: /tmp/chaosengine-pod-autoscaler-hpi.yaml
-        raw:
-          data: |
-            apiVersion: litmuschaos.io/v1alpha1
-            kind: ChaosEngine
-            metadata:
-              namespace: "{{workflow.parameters.adminModeNamespace}}"
-              generateName: pod-autoscaler-hpi
-              labels:
-                workflow_run_id: "{{ workflow.uid }}"
-                workflow_name: test-test-01
-            spec:
-              engineState: active
-              auxiliaryAppInfo: ""
-              appinfo:
-                appns: ved-qa1
-                applabel: app=udit
-                appkind: deployment
-              chaosServiceAccount: litmus-admin
-              experiments:
-                - name: pod-autoscaler
-                  spec:
-                    components:
-                      env:
-                        - name: TOTAL_CHAOS_DURATION
-                          value: "10"
-                        - name: REPLICA_COUNT
-                          value: "2"
-                    probe:
-                      - name: healthcheck
-                        type: cmdProbe
-                        mode: Edge
-                        runProperties:
-                          probeTimeout: 180
-                          retry: 0
-                          interval: 1
-                          stopOnFailure: true
-                        cmdProbe/inputs:
-                          command: ./healthcheck -name pod-level
-                          source:
-                            image: chaosnative/go-runner:ci
-                            inheritInputs: true
-                          comparator:
-                            type: string
-                            criteria: contains
-                            value: "[P000]"
-    metadata:
-      labels:
-        weight: "10"
-    name: pod-autoscaler-hpi
+    name: pod-delete-419
     outputs: {}
 status:
   finishedAt: null

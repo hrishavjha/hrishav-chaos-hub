@@ -18,9 +18,7 @@ spec:
   experiments: null
   faults:
   - description: ""
-    name: pod-delete-1hs
-  - description: ""
-    name: pod-autoscaler-hpi
+    name: pod-delete-419
   keywords: []
   provider:
     name: ""
