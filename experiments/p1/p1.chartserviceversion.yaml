@@ -1,0 +1,25 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: p1
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: ""
+  displayName: p1-chaos
+  experiments: null
+  faults:
+  - description: ""
+    name: pod-delete-hq5
+  keywords: []
+  provider:
+    name: ""
+  scenarios: null
