@@ -31,4 +31,4 @@ spec:
   - port: 80
     protocol: TCP
   selector:
-    run: nginx-deployment
+    app: nginx
