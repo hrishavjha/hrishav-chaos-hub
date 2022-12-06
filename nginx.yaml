@@ -6,10 +6,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  selector:
-    matchLabels: null
-  app: nginx
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
