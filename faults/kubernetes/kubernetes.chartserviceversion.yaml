@@ -13,9 +13,11 @@ spec:
   faults:
     - name: pod-delete
       description: It injects pod-delete chaos in a Kubernetes pod.
+      displayName: POD DELETE
     - name: container-kill
       description: It injects container-kill chaos in a Kubernetes pod .
     - name: pod-cpu-hog
+      displayName: HELLO WROLD
       description: It injects cpu-hog chaos in a Kubernetes pod.
     - name: pod-network-loss
       description: It injects network-loss chaos in a Kubernetes pod.
