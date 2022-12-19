@@ -1,0 +1,26 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: push-to-hub
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: ""
+  displayName: push-to-hub
+  experiments: null
+  faults:
+  - description: ""
+    displayName: ""
+    name: pod-delete-uib
+  keywords: []
+  provider:
+    name: ""
+  scenarios: null
