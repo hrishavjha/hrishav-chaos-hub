@@ -2,9 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   creationTimestamp: null
-  labels:
-    infra_id: 86fb431c-011b-492e-b8db-102e3f00eb7d
-    revision_id: 066f42cf-50a9-4ca7-aaa7-a048aee44766
   name: demo
   namespace: hce
 spec:
@@ -12,7 +9,7 @@ spec:
     parameters:
     - name: adminModeNamespace
       value: hce
-  entrypoint: fe-boutique-1
+  entrypoint: push-test
   podGC:
     strategy: OnWorkflowCompletion
   securityContext:
@@ -22,15 +19,18 @@ spec:
   templates:
   - inputs: {}
     metadata: {}
-    name: fe-boutique-1
+    name: push-test
     outputs: {}
     steps:
     - - arguments: {}
         name: install-chaos-faults
         template: install-chaos-faults
     - - arguments: {}
-        name: pod-delete-hq5
-        template: pod-delete-hq5
+        name: pod-delete-ead
+        template: pod-delete-ead
+    - - arguments: {}
+        name: pod-cpu-hog-iw6
+        template: pod-cpu-hog-iw6
     - - arguments: {}
         name: cleanup-chaos-resources
         template: cleanup-chaos-resources
@@ -46,8 +46,8 @@ spec:
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-hq5
-        path: /tmp/pod-delete-hq5.yaml
+      - name: pod-delete-ead
+        path: /tmp/pod-delete-ead.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
@@ -200,6 +200,169 @@ spec:
                   app.kubernetes.io/part-of: litmus
                   app.kubernetes.io/component: experiment-job
                   app.kubernetes.io/version: ci
+      - name: pod-cpu-hog-iw6
+        path: /tmp/pod-cpu-hog-iw6.yaml
+        raw:
+          data: |
+            apiVersion: litmuschaos.io/v1alpha1
+            description:
+              message: |
+                Injects cpu consumption on pods belonging to an app deployment
+            kind: ChaosExperiment
+            metadata:
+              name: pod-cpu-hog
+              labels:
+                name: pod-cpu-hog
+                app.kubernetes.io/part-of: litmus
+                app.kubernetes.io/component: chaosexperiment
+                app.kubernetes.io/version: ci
+            spec:
+              definition:
+                scope: Namespaced
+                permissions:
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods
+                    verbs:
+                      - create
+                      - delete
+                      - get
+                      - list
+                      - patch
+                      - update
+                      - deletecollection
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - events
+                    verbs:
+                      - create
+                      - get
+                      - list
+                      - patch
+                      - update
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - configmaps
+                    verbs:
+                      - get
+                      - list
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods/log
+                    verbs:
+                      - get
+                      - list
+                      - watch
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods/exec
+                    verbs:
+                      - get
+                      - list
+                      - create
+                  - apiGroups:
+                      - apps
+                    resources:
+                      - deployments
+                      - statefulsets
+                      - replicasets
+                      - daemonsets
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - apps.openshift.io
+                    resources:
+                      - deploymentconfigs
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - replicationcontrollers
+                    verbs:
+                      - get
+                      - list
+                  - apiGroups:
+                      - argoproj.io
+                    resources:
+                      - rollouts
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - batch
+                    resources:
+                      - jobs
+                    verbs:
+                      - create
+                      - list
+                      - get
+                      - delete
+                      - deletecollection
+                  - apiGroups:
+                      - litmuschaos.io
+                    resources:
+                      - chaosengines
+                      - chaosexperiments
+                      - chaosresults
+                    verbs:
+                      - create
+                      - list
+                      - get
+                      - patch
+                      - update
+                      - delete
+                image: chaosnative/go-runner:ci
+                imagePullPolicy: Always
+                args:
+                  - -c
+                  - ./experiments -name pod-cpu-hog
+                command:
+                  - /bin/bash
+                env:
+                  - name: TOTAL_CHAOS_DURATION
+                    value: "60"
+                  - name: CPU_CORES
+                    value: "1"
+                  - name: CPU_LOAD
+                    value: "100"
+                  - name: PODS_AFFECTED_PERC
+                    value: ""
+                  - name: RAMP_TIME
+                    value: ""
+                  - name: LIB
+                    value: litmus
+                  - name: LIB_IMAGE
+                    value: chaosnative/go-runner:ci
+                  - name: STRESS_IMAGE
+                    value: alexeiled/stress-ng:latest-ubuntu
+                  - name: CONTAINER_RUNTIME
+                    value: docker
+                  - name: SOCKET_PATH
+                    value: /var/run/docker.sock
+                  - name: TARGET_CONTAINER
+                    value: ""
+                  - name: TARGET_PODS
+                    value: ""
+                  - name: DEFAULT_HEALTH_CHECK
+                    value: "false"
+                  - name: NODE_LABEL
+                    value: ""
+                  - name: SEQUENCE
+                    value: parallel
+                labels:
+                  name: pod-cpu-hog
+                  app.kubernetes.io/part-of: litmus
+                  app.kubernetes.io/component: experiment-job
+                  app.kubernetes.io/runtime-api-usage: "true"
+                  app.kubernetes.io/version: ci
     metadata: {}
     name: install-chaos-faults
     outputs: {}
@@ -218,29 +381,28 @@ spec:
     outputs: {}
   - container:
       args:
-      - -file=/tmp/chaosengine-pod-delete-hq5.yaml
+      - -file=/tmp/chaosengine-pod-delete-ead.yaml
       - -saveName=/tmp/engine-name
       image: chaosnative/litmus-checker:2.11.0
       name: ""
       resources: {}
     inputs:
       artifacts:
-      - name: pod-delete-hq5
-        path: /tmp/chaosengine-pod-delete-hq5.yaml
+      - name: pod-delete-ead
+        path: /tmp/chaosengine-pod-delete-ead.yaml
         raw:
           data: |
             apiVersion: litmuschaos.io/v1alpha1
             kind: ChaosEngine
             metadata:
               namespace: "{{workflow.parameters.adminModeNamespace}}"
-              generateName: pod-delete-hq5
+              generateName: pod-delete-ead
               labels:
                 workflow_run_id: "{{ workflow.uid }}"
-                workflow_name: fe-boutique-1
             spec:
               appinfo:
-                appns: boutique
-                applabel: app=frontend
+                appns: default
+                applabel: app=nginx
                 appkind: deployment
               engineState: active
               chaosServiceAccount: litmus-admin
@@ -250,7 +412,7 @@ spec:
                     components:
                       env:
                         - name: TOTAL_CHAOS_DURATION
-                          value: "60"
+                          value: "30"
                         - name: CHAOS_INTERVAL
                           value: "10"
                         - name: FORCE
@@ -278,7 +440,72 @@ spec:
     metadata:
       labels:
         weight: "10"
-    name: pod-delete-hq5
+    name: pod-delete-ead
+    outputs: {}
+  - container:
+      args:
+      - -file=/tmp/chaosengine-pod-cpu-hog-iw6.yaml
+      - -saveName=/tmp/engine-name
+      image: chaosnative/litmus-checker:2.11.0
+      name: ""
+      resources: {}
+    inputs:
+      artifacts:
+      - name: pod-cpu-hog-iw6
+        path: /tmp/chaosengine-pod-cpu-hog-iw6.yaml
+        raw:
+          data: |
+            apiVersion: litmuschaos.io/v1alpha1
+            kind: ChaosEngine
+            metadata:
+              namespace: "{{workflow.parameters.adminModeNamespace}}"
+              generateName: pod-cpu-hog-iw6
+              labels:
+                workflow_run_id: "{{ workflow.uid }}"
+            spec:
+              engineState: active
+              appinfo:
+                appns: default
+                applabel: app=nginx
+                appkind: deployment
+              chaosServiceAccount: litmus-admin
+              experiments:
+                - name: pod-cpu-hog
+                  spec:
+                    components:
+                      env:
+                        - name: TOTAL_CHAOS_DURATION
+                          value: "60"
+                        - name: CPU_CORES
+                          value: "1"
+                        - name: PODS_AFFECTED_PERC
+                          value: ""
+                        - name: CONTAINER_RUNTIME
+                          value: docker
+                        - name: SOCKET_PATH
+                          value: /var/run/docker.sock
+                    probe:
+                      - name: healthcheck
+                        type: cmdProbe
+                        mode: Edge
+                        runProperties:
+                          probeTimeout: 180
+                          retry: 0
+                          interval: 1
+                          stopOnFailure: true
+                        cmdProbe/inputs:
+                          command: ./healthcheck -name pod-level
+                          source:
+                            image: chaosnative/go-runner:ci
+                            inheritInputs: true
+                          comparator:
+                            type: string
+                            criteria: contains
+                            value: "[P000]"
+    metadata:
+      labels:
+        weight: "10"
+    name: pod-cpu-hog-iw6
     outputs: {}
 status:
   finishedAt: null

@@ -13,15 +13,11 @@ packageInfo:
   experiments: null
   packageName: ""
 spec:
-  categoryDescription: amit
-  displayName: demo-chaos
+  categoryDescription: ""
+  displayName: demo
   experiments: null
-  faults:
-  - description: ""
-    name: pod-delete-hq5
-  keywords:
-  - push
-  - pprof
+  faults: null
+  keywords: []
   provider:
     name: ""
   scenarios: null
