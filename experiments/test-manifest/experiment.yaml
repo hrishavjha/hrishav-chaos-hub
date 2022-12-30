@@ -1,0 +1,405 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  creationTimestamp: null
+  labels:
+    infra_id: 396e0eb5-a47b-43f9-ad0c-c2a9f0b1526e
+    revision_id: b141860a-3160-430e-8b51-505ee68b2a76
+  name: test-manifest
+  namespace: hce
+spec:
+  arguments:
+    parameters:
+    - name: adminModeNamespace
+      value: hce
+  entrypoint: sagar-ctr-kill
+  podGC:
+    strategy: OnWorkflowCompletion
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: argo-chaos
+  templates:
+  - inputs: {}
+    metadata: {}
+    name: sagar-ctr-kill
+    outputs: {}
+    steps:
+    - - arguments: {}
+        name: install-chaos-faults
+        template: install-chaos-faults
+    - - arguments: {}
+        name: container-kill-sto
+        template: container-kill-sto
+    - - arguments: {}
+        name: pod-delete-n1c
+        template: pod-delete-n1c
+    - - arguments: {}
+        name: cleanup-chaos-resources
+        template: cleanup-chaos-resources
+  - container:
+      args:
+      - kubectl apply -f /tmp/ -n {{workflow.parameters.adminModeNamespace}} && sleep
+        30
+      command:
+      - sh
+      - -c
+      image: chaosnative/k8s:2.11.0
+      name: ""
+      resources: {}
+    inputs:
+      artifacts:
+      - name: container-kill-sto
+        path: /tmp/container-kill-sto.yaml
+        raw:
+          data: "apiVersion: litmuschaos.io/v1alpha1\ndescription:\n  message: |\n
+            \   Kills a container belonging to an application pod \nkind: ChaosExperiment\nmetadata:\n
+            \ name: container-kill\n  labels:\n    name: container-kill\n    app.kubernetes.io/part-of:
+            litmus\n    app.kubernetes.io/component: chaosexperiment\n    app.kubernetes.io/version:
+            ci\nspec:\n  definition:\n    scope: Namespaced\n    permissions:\n      -
+            apiGroups:\n          - \"\"\n        resources:\n          - pods\n        verbs:\n
+            \         - create\n          - delete\n          - get\n          - list\n
+            \         - patch\n          - update\n          - deletecollection\n
+            \     - apiGroups:\n          - \"\"\n        resources:\n          -
+            events\n        verbs:\n          - create\n          - get\n          -
+            list\n          - patch\n          - update\n      - apiGroups:\n          -
+            \"\"\n        resources:\n          - configmaps\n        verbs:\n          -
+            get\n          - list\n      - apiGroups:\n          - \"\"\n        resources:\n
+            \         - pods/log\n        verbs:\n          - get\n          - list\n
+            \         - watch\n      - apiGroups:\n          - \"\"\n        resources:\n
+            \         - pods/exec\n        verbs:\n          - get\n          - list\n
+            \         - create\n      - apiGroups:\n          - apps\n        resources:\n
+            \         - deployments\n          - statefulsets\n          - replicasets\n
+            \         - daemonsets\n        verbs:\n          - list\n          -
+            get\n      - apiGroups:\n          - apps.openshift.io\n        resources:\n
+            \         - deploymentconfigs\n        verbs:\n          - list\n          -
+            get\n      - apiGroups:\n          - \"\"\n        resources:\n          -
+            replicationcontrollers\n        verbs:\n          - get\n          - list\n
+            \     - apiGroups:\n          - argoproj.io\n        resources:\n          -
+            rollouts\n        verbs:\n          - list\n          - get\n      - apiGroups:\n
+            \         - batch\n        resources:\n          - jobs\n        verbs:\n
+            \         - create\n          - list\n          - get\n          - delete\n
+            \         - deletecollection\n      - apiGroups:\n          - litmuschaos.io\n
+            \       resources:\n          - chaosengines\n          - chaosexperiments\n
+            \         - chaosresults\n        verbs:\n          - create\n          -
+            list\n          - get\n          - patch\n          - update\n          -
+            delete\n    image: chaosnative/go-runner:ci\n    imagePullPolicy: Always\n
+            \   args:\n      - -c\n      - ./experiments -name container-kill\n    command:\n
+            \     - /bin/bash\n    env:\n      - name: TARGET_CONTAINER\n        value:
+            \"\"\n      - name: RAMP_TIME\n        value: \"\"\n      - name: LIB\n
+            \       value: litmus\n      - name: TARGET_PODS\n        value: \"\"\n
+            \     - name: CHAOS_INTERVAL\n        value: \"10\"\n      - name: SIGNAL\n
+            \       value: SIGKILL\n      - name: SOCKET_PATH\n        value: /var/run/docker.sock\n
+            \     - name: CONTAINER_RUNTIME\n        value: docker\n      - name:
+            TOTAL_CHAOS_DURATION\n        value: \"20\"\n      - name: PODS_AFFECTED_PERC\n
+            \       value: \"\"\n      - name: NODE_LABEL\n        value: \"\"\n      -
+            name: DEFAULT_HEALTH_CHECK\n        value: \"false\"\n      - name: LIB_IMAGE\n
+            \       value: chaosnative/go-runner:ci\n      - name: SEQUENCE\n        value:
+            parallel\n    labels:\n      name: container-kill\n      app.kubernetes.io/part-of:
+            litmus\n      app.kubernetes.io/component: experiment-job\n      app.kubernetes.io/runtime-api-usage:
+            \"true\"\n      app.kubernetes.io/version: ci\n"
+      - name: pod-delete-n1c
+        path: /tmp/pod-delete-n1c.yaml
+        raw:
+          data: |
+            apiVersion: litmuschaos.io/v1alpha1
+            description:
+              message: |
+                Deletes a pod belonging to a deployment/statefulset/daemonset
+            kind: ChaosExperiment
+            metadata:
+              name: pod-delete
+              labels:
+                name: pod-delete
+                app.kubernetes.io/part-of: litmus
+                app.kubernetes.io/component: chaosexperiment
+                app.kubernetes.io/version: ci
+            spec:
+              definition:
+                scope: Namespaced
+                permissions:
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods
+                    verbs:
+                      - create
+                      - delete
+                      - get
+                      - list
+                      - patch
+                      - update
+                      - deletecollection
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - events
+                    verbs:
+                      - create
+                      - get
+                      - list
+                      - patch
+                      - update
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - configmaps
+                    verbs:
+                      - get
+                      - list
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods/log
+                    verbs:
+                      - get
+                      - list
+                      - watch
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - pods/exec
+                    verbs:
+                      - get
+                      - list
+                      - create
+                  - apiGroups:
+                      - apps
+                    resources:
+                      - deployments
+                      - statefulsets
+                      - replicasets
+                      - daemonsets
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - apps.openshift.io
+                    resources:
+                      - deploymentconfigs
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - ""
+                    resources:
+                      - replicationcontrollers
+                    verbs:
+                      - get
+                      - list
+                  - apiGroups:
+                      - argoproj.io
+                    resources:
+                      - rollouts
+                    verbs:
+                      - list
+                      - get
+                  - apiGroups:
+                      - batch
+                    resources:
+                      - jobs
+                    verbs:
+                      - create
+                      - list
+                      - get
+                      - delete
+                      - deletecollection
+                  - apiGroups:
+                      - litmuschaos.io
+                    resources:
+                      - chaosengines
+                      - chaosexperiments
+                      - chaosresults
+                    verbs:
+                      - create
+                      - list
+                      - get
+                      - patch
+                      - update
+                      - delete
+                image: chaosnative/go-runner:ci
+                imagePullPolicy: Always
+                args:
+                  - -c
+                  - ./experiments -name pod-delete
+                command:
+                  - /bin/bash
+                env:
+                  - name: TOTAL_CHAOS_DURATION
+                    value: "15"
+                  - name: RAMP_TIME
+                    value: ""
+                  - name: FORCE
+                    value: "true"
+                  - name: CHAOS_INTERVAL
+                    value: "5"
+                  - name: PODS_AFFECTED_PERC
+                    value: ""
+                  - name: LIB
+                    value: litmus
+                  - name: TARGET_CONTAINER
+                    value: ""
+                  - name: TARGET_PODS
+                    value: ""
+                  - name: DEFAULT_HEALTH_CHECK
+                    value: "false"
+                  - name: NODE_LABEL
+                    value: ""
+                  - name: SEQUENCE
+                    value: parallel
+                labels:
+                  name: pod-delete
+                  app.kubernetes.io/part-of: litmus
+                  app.kubernetes.io/component: experiment-job
+                  app.kubernetes.io/version: ci
+    metadata: {}
+    name: install-chaos-faults
+    outputs: {}
+  - container:
+      args:
+      - kubectl delete chaosengine -l workflow_run_id={{workflow.uid}} -n {{workflow.parameters.adminModeNamespace}}
+      command:
+      - sh
+      - -c
+      image: chaosnative/k8s:2.11.0
+      name: ""
+      resources: {}
+    inputs: {}
+    metadata: {}
+    name: cleanup-chaos-resources
+    outputs: {}
+  - container:
+      args:
+      - -file=/tmp/chaosengine-container-kill-sto.yaml
+      - -saveName=/tmp/engine-name
+      image: chaosnative/litmus-checker:2.11.0
+      name: ""
+      resources: {}
+    inputs:
+      artifacts:
+      - name: container-kill-sto
+        path: /tmp/chaosengine-container-kill-sto.yaml
+        raw:
+          data: |
+            apiVersion: litmuschaos.io/v1alpha1
+            kind: ChaosEngine
+            metadata:
+              namespace: "{{workflow.parameters.adminModeNamespace}}"
+              generateName: container-kill-sto
+              labels:
+                workflow_run_id: "{{ workflow.uid }}"
+                workflow_name: sagar-ctr-kill
+            spec:
+              engineState: active
+              appinfo:
+                appns: litmus
+                applabel: name=litmus
+                appkind: deployment
+              chaosServiceAccount: litmus-admin
+              experiments:
+                - name: container-kill
+                  spec:
+                    components:
+                      env:
+                        - name: TOTAL_CHAOS_DURATION
+                          value: "20"
+                        - name: CHAOS_INTERVAL
+                          value: "10"
+                        - name: CONTAINER_RUNTIME
+                          value: docker
+                        - name: SOCKET_PATH
+                          value: /var/run/docker.sock
+                        - name: PODS_AFFECTED_PERC
+                          value: ""
+                        - name: TARGET_CONTAINER
+                          value: ""
+                    probe:
+                      - name: healthcheck
+                        type: cmdProbe
+                        mode: Edge
+                        runProperties:
+                          probeTimeout: 180
+                          retry: 0
+                          interval: 1
+                          stopOnFailure: true
+                        cmdProbe/inputs:
+                          command: ./healthcheck -name pod-level
+                          source:
+                            image: chaosnative/go-runner:ci
+                            inheritInputs: true
+                          comparator:
+                            type: string
+                            criteria: contains
+                            value: "[P000]"
+    metadata:
+      labels:
+        weight: "10"
+    name: container-kill-sto
+    outputs: {}
+  - container:
+      args:
+      - -file=/tmp/chaosengine-pod-delete-n1c.yaml
+      - -saveName=/tmp/engine-name
+      image: chaosnative/litmus-checker:2.11.0
+      name: ""
+      resources: {}
+    inputs:
+      artifacts:
+      - name: pod-delete-n1c
+        path: /tmp/chaosengine-pod-delete-n1c.yaml
+        raw:
+          data: |
+            apiVersion: litmuschaos.io/v1alpha1
+            kind: ChaosEngine
+            metadata:
+              namespace: "{{workflow.parameters.adminModeNamespace}}"
+              generateName: pod-delete-n1c
+              labels:
+                workflow_run_id: "{{ workflow.uid }}"
+                workflow_name: sagar-ctr-kill
+            spec:
+              appinfo:
+                appns: litmus
+                applabel: app=chaos-exporter
+                appkind: deployment
+              engineState: active
+              chaosServiceAccount: litmus-admin
+              experiments:
+                - name: pod-delete
+                  spec:
+                    components:
+                      env:
+                        - name: TOTAL_CHAOS_DURATION
+                          value: "30"
+                        - name: CHAOS_INTERVAL
+                          value: "10"
+                        - name: FORCE
+                          value: "false"
+                        - name: PODS_AFFECTED_PERC
+                          value: ""
+                    probe:
+                      - name: healthcheck
+                        type: cmdProbe
+                        mode: Edge
+                        runProperties:
+                          probeTimeout: 180
+                          retry: 0
+                          interval: 1
+                          stopOnFailure: true
+                        cmdProbe/inputs:
+                          command: ./healthcheck -name pod-level
+                          source:
+                            image: chaosnative/go-runner:ci
+                            inheritInputs: true
+                          comparator:
+                            type: string
+                            criteria: contains
+                            value: "[P000]"
+    metadata:
+      labels:
+        weight: "10"
+    name: pod-delete-n1c
+    outputs: {}
+status:
+  finishedAt: null
+  startedAt: null
