@@ -1,0 +1,27 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: push-to-hub-0501
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: testing push to hub from exp creation screens
+  displayName: push-to-hub-0501
+  experiments: null
+  faults: null
+  keywords:
+  - push
+  - to
+  - hub
+  - studio
+  provider:
+    name: ""
+  scenarios: null
