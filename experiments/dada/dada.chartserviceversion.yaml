@@ -1,0 +1,30 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: dada
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: test-1
+  displayName: dada
+  experiments: null
+  faults:
+  - description: ""
+    displayName: ""
+    name: linux-cpu-stress-kde
+  keywords:
+  - hello
+  - world
+  - haha
+  - barca
+  provider:
+    name: ""
+  scenarios: null
