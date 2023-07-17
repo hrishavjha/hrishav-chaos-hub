@@ -229,7 +229,7 @@ spec:
                             cmdProbe/inputs:
                               command: ./healthcheck -name pod-level
                               source:
-                                image: chaosnative/go-runner:ci
+                                image: chaosnative/go-runner:3.0.0-beta3
                                 inheritInputs: true
                               comparator:
                                 type: string
