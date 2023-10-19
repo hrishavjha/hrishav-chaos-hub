@@ -2,43 +2,34 @@
   "kind": "Workflow",
   "apiVersion": "argoproj.io/v1alpha1",
   "metadata": {
-    "name": "nginx-pod-delete-1697748071",
-    "namespace": "hce",
+    "name": "aws-lambda-delete-event-source-mapping-1658947438",
+    "namespace": "litmus",
+    "creationTimestamp": null,
     "labels": {
-      "infra_id": "f68f5c65-ab1a-4a42-a2b9-5043893115c9",
-      "revision_id": "481d375b-acec-4da8-80f7-63b766bfcb8d",
-      "subject": "custom-chaos-workflow_litmus",
-      "workflow_id": "73d122dd-23f3-479a-a8bf-cd7eb454e0f7",
-      "workflows.argoproj.io/controller-instanceid": "f68f5c65-ab1a-4a42-a2b9-5043893115c9"
+      "subject": "aws-lambda-delete-event-source-mapping_litmus"
     }
   },
   "spec": {
     "templates": [
       {
         "name": "custom-chaos",
-        "inputs": {},
-        "outputs": {},
-        "metadata": {},
         "steps": [
           [
             {
               "name": "install-chaos-faults",
-              "template": "install-chaos-faults",
-              "arguments": {}
+              "template": "install-chaos-faults"
             }
           ],
           [
             {
-              "name": "pod-delete-o2z",
-              "template": "pod-delete-o2z",
-              "arguments": {}
+              "name": "lambda-delete-event-source-mapping-mgk",
+              "template": "lambda-delete-event-source-mapping-mgk"
             }
           ],
           [
             {
               "name": "cleanup-chaos-resources",
-              "template": "cleanup-chaos-resources",
-              "arguments": {}
+              "template": "cleanup-chaos-resources"
             }
           ]
         ]
@@ -48,43 +39,39 @@
         "inputs": {
           "artifacts": [
             {
-              "name": "pod-delete-o2z",
-              "path": "/tmp/pod-delete-o2z.yaml",
+              "name": "lambda-delete-event-source-mapping-mgk",
+              "path": "/tmp/lambda-delete-event-source-mapping-mgk.yaml",
               "raw": {
-                "data": "apiVersion: litmuschaos.io/v1alpha1\ndescription:\n  message: |\n    Deletes a pod belonging to a deployment/statefulset/daemonset\nkind: ChaosExperiment\nmetadata:\n  name: pod-delete\n  labels:\n    name: pod-delete\n    app.kubernetes.io/part-of: litmus\n    app.kubernetes.io/component: chaosexperiment\n    app.kubernetes.io/version: ci\nspec:\n  definition:\n    scope: Namespaced\n    permissions:\n      - apiGroups:\n          - \"\"\n        resources:\n          - pods\n        verbs:\n          - create\n          - delete\n          - get\n          - list\n          - patch\n          - update\n          - deletecollection\n      - apiGroups:\n          - \"\"\n        resources:\n          - events\n        verbs:\n          - create\n          - get\n          - list\n          - patch\n          - update\n      - apiGroups:\n          - \"\"\n        resources:\n          - configmaps\n        verbs:\n          - get\n          - list\n      - apiGroups:\n          - \"\"\n        resources:\n          - pods/log\n        verbs:\n          - get\n          - list\n          - watch\n      - apiGroups:\n          - \"\"\n        resources:\n          - pods/exec\n        verbs:\n          - get\n          - list\n          - create\n      - apiGroups:\n          - apps\n        resources:\n          - deployments\n          - statefulsets\n          - replicasets\n          - daemonsets\n        verbs:\n          - list\n          - get\n      - apiGroups:\n          - apps.openshift.io\n        resources:\n          - deploymentconfigs\n        verbs:\n          - list\n          - get\n      - apiGroups:\n          - \"\"\n        resources:\n          - replicationcontrollers\n        verbs:\n          - get\n          - list\n      - apiGroups:\n          - argoproj.io\n        resources:\n          - rollouts\n        verbs:\n          - list\n          - get\n      - apiGroups:\n          - batch\n        resources:\n          - jobs\n        verbs:\n          - create\n          - list\n          - get\n          - delete\n          - deletecollection\n      - apiGroups:\n          - litmuschaos.io\n        resources:\n          - chaosengines\n          - chaosexperiments\n          - chaosresults\n        verbs:\n          - create\n          - list\n          - get\n          - patch\n          - update\n          - delete\n    image: chaosnative/go-runner:ci\n    imagePullPolicy: Always\n    args:\n      - -c\n      - ./experiments -name pod-delete\n    command:\n      - /bin/bash\n    env:\n      - name: TOTAL_CHAOS_DURATION\n        value: \"15\"\n      - name: RAMP_TIME\n        value: \"\"\n      - name: FORCE\n        value: \"true\"\n      - name: CHAOS_INTERVAL\n        value: \"5\"\n      - name: PODS_AFFECTED_PERC\n        value: \"\"\n      - name: LIB\n        value: litmus\n      - name: TARGET_PODS\n        value: \"\"\n      - name: NODE_LABEL\n        value: \"\"\n      - name: SEQUENCE\n        value: parallel\n      - name: DEFAULT_HEALTH_CHECK\n        value: 'false'\n    labels:\n      name: pod-delete\n      app.kubernetes.io/part-of: litmus\n      app.kubernetes.io/component: experiment-job\n      app.kubernetes.io/version: ci\n"
+                "data": "apiVersion: litmuschaos.io/v1alpha1\ndescription:\n  message: |\n    Inject AWS lambda delete event source mapping for a certain chaos duration\nkind: ChaosExperiment\nmetadata:\n  name: lambda-delete-event-source-mapping\n  labels:\n    name: lambda-delete-event-source-mapping\n    app.kubernetes.io/part-of: litmus\n    app.kubernetes.io/component: chaosexperiment\n    app.kubernetes.io/version: ci\nspec:\n  definition:\n    scope: Cluster\n    permissions:\n      - apiGroups:\n          - \"\"\n        resources:\n          - pods\n        verbs:\n          - create\n          - delete\n          - get\n          - list\n          - patch\n          - update\n          - deletecollection\n      - apiGroups:\n          - \"\"\n        resources:\n          - events\n        verbs:\n          - create\n          - get\n          - list\n          - patch\n          - update\n      - apiGroups:\n          - \"\"\n        resources:\n          - secrets\n          - configmaps\n        verbs:\n          - get\n          - list\n      - apiGroups:\n          - \"\"\n        resources:\n          - pods/log\n        verbs:\n          - get\n          - list\n          - watch\n      - apiGroups:\n          - \"\"\n        resources:\n          - pods/exec\n        verbs:\n          - get\n          - list\n          - create\n      - apiGroups:\n          - batch\n        resources:\n          - jobs\n        verbs:\n          - create\n          - list\n          - get\n          - delete\n          - deletecollection\n      - apiGroups:\n          - litmuschaos.io\n        resources:\n          - chaosengines\n          - chaosexperiments\n          - chaosresults\n        verbs:\n          - create\n          - list\n          - get\n          - patch\n          - update\n          - delete\n      - apiGroups:\n          - \"\"\n        resources:\n          - nodes\n        verbs:\n          - get\n          - list\n    image: chaosnative/chaos-go-runner:main-latest\n    imagePullPolicy: Always\n    args:\n      - -c\n      - ./experiments -name lambda-delete-event-source-mapping\n    command:\n      - /bin/bash\n    env:\n    - name: TOTAL_CHAOS_DURATION\n      value: '30'\n    - name: RAMP_TIME\n      value: ''\n    - name: FUNCTION_NAME\n      value: ''\n    - name: EVENT_UUIDS\n      value: ''\n    - name: REGION\n      value: ''\n    - name: SEQUENCE\n      value: 'parallel'\n    - name: AWS_SHARED_CREDENTIALS_FILE\n      value: '/tmp/cloud_config.yml'\n    labels:\n      name: lambda-delete-event-source-mapping\n      app.kubernetes.io/part-of: litmus\n      app.kubernetes.io/component: experiment-job\n      app.kubernetes.io/version: ci\n    secrets:\n      - name: cloud-secret\n        mountPath: /tmp/\n"
               }
             }
           ]
         },
-        "outputs": {},
-        "metadata": {},
         "container": {
           "name": "",
-          "image": "litmuschaos/k8s:2.13.0",
+          "image": "docker.io/chaosnative/k8s:1.15.0",
           "command": [
             "sh",
             "-c"
           ],
           "args": [
-            "kubectl apply -f /tmp/pod-delete-o2z.yaml -n {{workflow.parameters.adminModeNamespace}} && sleep 30"
-          ],
-          "resources": {}
+            "kubectl apply -f /tmp/ -n {{workflow.parameters.adminModeNamespace}} && sleep 30"
+          ]
         }
       },
       {
-        "name": "pod-delete-o2z",
+        "name": "lambda-delete-event-source-mapping-mgk",
         "inputs": {
           "artifacts": [
             {
-              "name": "pod-delete-o2z",
-              "path": "/tmp/chaosengine-pod-delete-o2z.yaml",
+              "name": "lambda-delete-event-source-mapping-mgk",
+              "path": "/tmp/chaosengine-lambda-delete-event-source-mapping-mgk.yaml",
               "raw": {
-                "data": "apiVersion: litmuschaos.io/v1alpha1\nkind: ChaosEngine\nmetadata:\n  namespace: \"{{workflow.parameters.adminModeNamespace}}\"\n  generateName: pod-delete-o2z\n  labels:\n    instance_id: 2760c483-64b6-4b65-a70d-368b72e7549b\n    workflow_name: custom-chaos-workflow-1657185180\nspec:\n  appinfo:\n    appns: default\n    applabel: app=nginx\n    appkind: deployment\n  engineState: active\n  chaosServiceAccount: litmus-admin\n  experiments:\n    - name: pod-delete\n      spec:\n        components:\n          env:\n            - name: TOTAL_CHAOS_DURATION\n              value: \"30\"\n            - name: CHAOS_INTERVAL\n              value: \"10\"\n            - name: FORCE\n              value: \"false\"\n            - name: PODS_AFFECTED_PERC\n              value: \"\"\n        probe:\n          - name: healthcheck\n            type: cmdProbe\n            mode: Edge\n            runProperties:\n              probeTimeout: 180\n              retry: 0\n              interval: 1\n              stopOnFailure: true\n            cmdProbe/inputs:\n              command: ./healthcheck -name pod-level\n              source:\n                image: chaosnative/go-runner:3.0.0-beta3\n                inheritInputs: true\n              comparator:\n                type: string\n                criteria: contains\n                value: \"[P000]\"\n"
+                "data": "apiVersion: litmuschaos.io/v1alpha1\nkind: ChaosEngine\nmetadata:\n  namespace: \"{{workflow.parameters.adminModeNamespace}}\"\n  generateName: lambda-delete-event-source-mapping-mgk\n  labels:\n    instance_id: 3b589183-7d6f-402c-835c-6a0638c00b96\n    workflow_name: lambda-delete-event-source-mapping-1658947438\nspec:\n  engineState: active\n  chaosServiceAccount: litmus-admin\n  experiments:\n    - name: lambda-delete-event-source-mapping\n      spec:\n        components:\n          env:\n            - name: TOTAL_CHAOS_DURATION\n              value: '30'\n            - name: FUNCTION_NAME\n              value: ''\n            - name: EVENT_UUIDS\n              value: ''\n            - name: REGION\n              value: ''\n            - name: SEQUENCE\n              value: 'parallel'\n        probe:\n          - name: healthcheck\n            type: cmdProbe\n            mode: SOT\n            runProperties:\n              probeTimeout: 5s\n              retry: 0\n              interval: 1s\n              stopOnFailure: false\n            cmdProbe/inputs:\n              command: ./healthcheck -name aws-lambda-delete-event-source-mapping\n              source:\n                image: chaosnative/chaos-go-runner:main-latest\n                inheritInputs: true\n              comparator:\n                type: string\n                criteria: contains\n                value: \"[P000]\"\n"
               }
             }
           ]
         },
-        "outputs": {},
         "metadata": {
           "labels": {
             "weight": "10"
@@ -92,30 +79,25 @@
         },
         "container": {
           "name": "",
-          "image": "litmuschaos/litmus-checker:2.13.0",
+          "image": "docker.io/chaosnative/litmus-checker:1.15.0",
           "args": [
-            "-file=/tmp/chaosengine-pod-delete-o2z.yaml",
+            "-file=/tmp/chaosengine-lambda-delete-event-source-mapping-mgk.yaml",
             "-saveName=/tmp/engine-name"
-          ],
-          "resources": {}
+          ]
         }
       },
       {
         "name": "cleanup-chaos-resources",
-        "inputs": {},
-        "outputs": {},
-        "metadata": {},
         "container": {
           "name": "",
-          "image": "litmuschaos/k8s:latest",
+          "image": "docker.io/chaosnative/k8s:1.15.0",
           "command": [
             "sh",
             "-c"
           ],
           "args": [
-            "kubectl delete chaosengine -l 'instance_id in (2760c483-64b6-4b65-a70d-368b72e7549b, )' -n {{workflow.parameters.adminModeNamespace}} "
-          ],
-          "resources": {}
+            "kubectl delete chaosengine -l 'instance_id in (3b589183-7d6f-402c-835c-6a0638c00b96, )' -n {{workflow.parameters.adminModeNamespace}} "
+          ]
         }
       }
     ],
@@ -136,6 +118,5 @@
       "runAsUser": 1000,
       "runAsNonRoot": true
     }
-  },
-  "status": {}
+  }
 }
