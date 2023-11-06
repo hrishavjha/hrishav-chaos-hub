@@ -1,0 +1,28 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: dasdasd
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: ""
+  displayName: dasdasd
+  experiments: null
+  faults:
+  - description: ""
+    displayName: ""
+    name: ecs-instance-stop-nd7
+    plan: null
+  keywords: []
+  plan: null
+  provider:
+    name: ""
+  scenarios: null
