@@ -1,0 +1,30 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChartServiceVersion
+metadata:
+  annotations:
+    categories: ""
+    chartDescription: ""
+    createdAt: ""
+    repository: ""
+    support: ""
+    vendor: ""
+  name: k8s-pod-delete
+packageInfo:
+  experiments: null
+  packageName: ""
+spec:
+  categoryDescription: ""
+  displayName: k8s-pod-delete
+  experiments: null
+  faults:
+  - description: ""
+    displayName: ""
+    name: pod-delete-ekg
+    plan: null
+    supportedVersion: null
+  keywords:
+  - kubernetes
+  plan: null
+  provider:
+    name: ""
+  scenarios: null
